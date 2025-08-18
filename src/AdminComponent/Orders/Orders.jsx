@@ -17,7 +17,7 @@ const orderStatus = [
   { label: "All", value: "ALL" },
 ];
 export const Orders = () => {
-  const [filterValue, setFilterValue] = useState();
+  const [filterValue, setFilterValue] = useState("ALL");
   const handleFilter = (e, value) => {
     setFilterValue(value);
   };
@@ -31,8 +31,8 @@ export const Orders = () => {
           <RadioGroup
             onChange={handleFilter}
             row
-            name="category"
-            value={filterValue || "all"}
+            name="orderStatus"
+            value={filterValue}
           >
             {orderStatus.map((item) => (
               <FormControlLabel
@@ -46,7 +46,7 @@ export const Orders = () => {
           </RadioGroup>
         </FormControl>
       </Card>
-      <OrderTable/>
+      <OrderTable filterValue={filterValue} />
     </div>
   );
 };

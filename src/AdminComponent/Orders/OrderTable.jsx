@@ -27,7 +27,7 @@ const orderStatus = [
   { label: "All", value: "ALL" },
 ];
 
-export default function OrderTable() {
+export default function OrderTable({ filterValue = "ALL" }) {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const { restaurant, restaurantOrder, menu, ingredients } = useSelector(
@@ -41,14 +41,20 @@ export default function OrderTable() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  // Refetch whenever filter changes (server-side filtering if supported) else we'll filter client-side
   useEffect(() => {
+    const restaurantId = restaurant?.usersRestaurants?.[0]?.id;
+    if (!restaurantId) return;
+    // Pass orderStatus only if not ALL
+    const orderStatus = filterValue === 'ALL' ? undefined : filterValue;
     dispatch(
       fetchRestaurantsOrder({
         jwt,
-        restaurantId: restaurant?.usersRestaurants?.[0]?.id,
+        restaurantId,
+        orderStatus,
       })
     );
-  }, [dispatch, jwt, restaurant]);
+  }, [dispatch, jwt, restaurant, filterValue]);
   const handleUpdateOrder=(orderId,orderStatus)=>{
     dispatch(updateOrderStatus({orderId,orderStatus,jwt}))
     handleClose();
@@ -72,7 +78,9 @@ export default function OrderTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {restaurantOrder.orders.map((item) => (
+              {restaurantOrder.orders
+                .filter(o => filterValue === 'ALL' ? true : o.orderStatus === filterValue)
+                .map((item) => (
                 <TableRow
                   key={item.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
