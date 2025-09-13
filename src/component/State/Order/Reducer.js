@@ -165,11 +165,26 @@ export const orderReducer = (state = initialState, { type, payload }) => {
         if (process.env.NODE_ENV !== 'production') console.warn('GET_USERS_ORDERS_SUCCESS: payload did not look like orders, ignoring');
         return { ...state, loading: false };
       }
+      const normalized = raw.map(normalizeOrder);
+      // Sort newest first: primary key createdAt desc, fallback to numeric/id desc
+      const sorted = normalized.slice().sort((a, b) => {
+        const da = a && a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const db = b && b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (db !== da) return db - da;
+        // fallback: compare id numerically if both numeric-like
+        const aid = a && (a.id || a._id || a.orderId);
+        const bid = b && (b.id || b._id || b.orderId);
+        const an = Number(aid);
+        const bn = Number(bid);
+        if (Number.isFinite(an) && Number.isFinite(bn)) return bn - an;
+        // final fallback: string compare desc
+        return String(bid || '').localeCompare(String(aid || ''));
+      });
       return {
         ...state,
         error: null,
         loading: false,
-        orders: raw.map(normalizeOrder),
+        orders: sorted,
       };
     }
 
