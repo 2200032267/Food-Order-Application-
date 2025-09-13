@@ -34,14 +34,13 @@ export default function OrderTable({ filterValue = "ALL" }) {
   const restaurant = useSelector((store) => store.restaurant || {});
   const restaurantOrder = useSelector((store) => store.restaurantOrder || { orders: [] });
   // not needed in this component; avoid selecting to reduce rerenders
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  // Track which order's menu is open to avoid updating the wrong order due to a shared single anchor
+  const [menuState, setMenuState] = React.useState({ anchorEl: null, orderId: null });
+  const open = Boolean(menuState.anchorEl);
+  const handleOpenMenu = (event, orderId) => {
+    setMenuState({ anchorEl: event.currentTarget, orderId });
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => setMenuState({ anchorEl: null, orderId: null });
   // Refetch whenever filter changes (server-side filtering if supported) else we'll filter client-side
   // compute restaurantId once from the restaurant slice to avoid reruns when
   // unrelated pieces of `restaurant` change (such as favorites nested in user)
@@ -71,10 +70,11 @@ export default function OrderTable({ filterValue = "ALL" }) {
     // only depend on dispatch, jwt, restaurantId and filterValue —
     // avoid depending on the whole restaurant object
   }, [dispatch, jwt, restaurantId, filterValue]);
-  const handleUpdateOrder=(orderId,orderStatus)=>{
-    dispatch(updateOrderStatus({orderId,orderStatus,jwt}))
+  const handleUpdateOrder = (orderStatus) => {
+    if (!menuState.orderId) return handleClose();
+    dispatch(updateOrderStatus({ orderId: menuState.orderId, orderStatus, jwt }));
     handleClose();
-  }
+  };
 
   // Helper getters to handle multiple possible API shapes
   const getOrderItems = (order) => {
@@ -183,6 +183,14 @@ export default function OrderTable({ filterValue = "ALL" }) {
     );
   };
 
+  // NOTE: Status updates here are order-level (not per individual line item). If
+  // a future requirement emerges to update each line item separately (e.g.
+  // mark a single dish as READY while others remain PENDING), we'd extend state
+  // to store an items array with its own status field and expose a new action:
+  // UPDATE_ORDER_ITEM_STATUS { orderId, itemId, itemStatus }. The reducer would
+  // then locate the order by stable string id and immutably map its items,
+  // updating only the targeted item. Backend support would also be needed.
+
   const getCustomerName = (order) => {
     if (!order) return '';
     if (order.customer) return order.customer.fullName || order.customer.name || order.customer.full_name || '';
@@ -251,29 +259,26 @@ export default function OrderTable({ filterValue = "ALL" }) {
                   <TableCell align="right">{getOrderStatus(item)}</TableCell>
                   <TableCell align="right">
                     <Button
-                      id="basic-button"
-                      aria-controls={open ? "basic-menu" : undefined}
                       aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                      onClick={handleClick}
+                      aria-expanded={open && menuState.orderId === item.id ? "true" : undefined}
+                      onClick={(e) => handleOpenMenu(e, item.id)}
                     >
                       update
                     </Button>
-                    <Menu
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      slotProps={{
-                        list: {
-                          "aria-labelledby": "basic-button",
-                        },
-                      }}
-                    >
-                     {orderStatus.map((status) => (
-                       <MenuItem key={status.value} onClick={() => handleUpdateOrder(item.id, status.value)}>{status.label}</MenuItem>
-                     ))}
-                    </Menu>
+                    {menuState.orderId === item.id && (
+                      <Menu
+                        anchorEl={menuState.anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        slotProps={{ list: { 'aria-labelledby': 'update-order-status' } }}
+                      >
+                        {orderStatus.map((status) => (
+                          <MenuItem key={status.value} onClick={() => handleUpdateOrder(status.value)}>
+                            {status.label}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

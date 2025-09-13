@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./component/State/Authentication/Action";
 import { findCart } from "./component/State/Cart/Action";
 import Routers from "./Routers/Routers";
+import Toasts from './component/utils/Toasts';
 import { getRestaurantByUserId } from "./component/State/Restaurant/Action";
 
 // Keys we consider application-auth related and will clear on timeout/unload.
@@ -111,7 +112,8 @@ function App() {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
 
-        <Routers />
+  <Routers />
+  <Toasts />
       </ThemeProvider>
     </div>
   );

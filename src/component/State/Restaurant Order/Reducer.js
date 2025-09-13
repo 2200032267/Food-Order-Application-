@@ -34,7 +34,9 @@ const extractItems = (o) => {
 
 const normalizeOrder = (o) => {
   if (!o || typeof o !== 'object') return o;
-  const id = o.id || o._id || o.orderId || (o.id ? String(o.id) : undefined) || undefined;
+  // Derive a stable string id for all comparisons to avoid mismatching numeric vs string ids.
+  const rawId = o.id || o._id || o.orderId || o.order_id;
+  const id = rawId != null ? String(rawId) : undefined;
   const rawItems = extractItems(o) || [];
   const items = (Array.isArray(rawItems) ? rawItems : []).map(it => {
     if (!it || typeof it !== 'object') return it;
@@ -131,18 +133,21 @@ const restaurantOrderReducer = (state = initialState, action) => {
     case UPDATE_ORDER_STATUS_OPTIMISTIC: {
       // action.payload: { orderId, orderStatus }
       const { orderId, orderStatus } = action.payload;
+      const targetId = orderId != null ? String(orderId) : undefined;
       return {
         ...state,
         orders: state.orders.map((o) =>
-          o.id === orderId ? { ...o, orderStatus } : o
+          (o && String(o.id) === targetId) ? { ...o, orderStatus } : o
         ),
       };
     }
     case UPDATE_ORDER_STATUS_SUCCESS:
-      // Ensure we merge the updated order (backend may return 'id' field)
+      // Ensure we merge the updated order (backend may return various id field names)
+      const payloadId = action.payload && (action.payload.id || action.payload._id || action.payload.orderId || action.payload.order_id);
+      const stablePayloadId = payloadId != null ? String(payloadId) : undefined;
       const updatedOrders = state.orders.map((order) =>
-        order.id === (action.payload.id || action.payload._id)
-          ? { ...order, ...action.payload }
+        (order && String(order.id) === stablePayloadId)
+          ? { ...order, ...action.payload, id: stablePayloadId }
           : order
       );
       return {

@@ -17,6 +17,7 @@ import {
   // we can reuse constants from restaurant slice by dynamic import or hardcode string, but we'll import type
 } from "./ActionType";
 import { CLEAR_RESTAURANT_STATE } from "../Restaurant/ActionTypes";
+import { addLocalNotification } from '../Notification/Action';
 import { getRestaurantByUserId } from "../Restaurant/Action";
 
 export const registerUser = (reqData) => async (dispatch) => {
@@ -94,11 +95,23 @@ export const loginUser = (reqData) => async (dispatch) => {
       reqData.userData
     );
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
-    dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
-    dispatch({ type: CLEAR_RESTAURANT_STATE });
+  dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
+  dispatch({ type: CLEAR_RESTAURANT_STATE });
     // Fetch full user profile immediately so client favorites and other
     // profile fields are populated after login.
-    try { await dispatch(getUser(data.jwt)); } catch (e) { /* ignore */ }
+    try { 
+      await dispatch(getUser(data.jwt));
+      // After profile loaded, craft personalized welcome
+      // profile will be read from localStorage snapshot instead of store accessor here
+      try {
+        // Access store via closure import (store not directly available here), so we rely on a quick refetch using api or a second dispatch
+        // Simpler: make another getUser call isn't ideal; instead we can read from localStorage user_profile
+        let profile = null;
+        try { const raw = localStorage.getItem('user_profile'); if (raw) profile = JSON.parse(raw); } catch(e) { /* ignore */ }
+        const displayName = profile?.fullName || profile?.name || profile?.username || profile?.email || 'User';
+        dispatch(addLocalNotification({ type: 'toast', title: `Welcome back, ${displayName}!`, body: 'Login successful', data: { level: 'success', context: 'login' } }));
+      } catch(e) { /* ignore toast errors */ }
+    } catch (e) { /* ignore */ }
   if (data.role === "ROLE_RESTAURANT_OWNER") {
       try { await dispatch(getRestaurantByUserId(data.jwt)); } catch(e) { /* ignore */ }
       // owner should always go to admin area
@@ -107,8 +120,28 @@ export const loginUser = (reqData) => async (dispatch) => {
     reqData.navigate("/");
     console.log("login sucess", data);
   } catch (error) {
-        dispatch({ type: LOGIN_FAILURE, payload: error });
-
+    dispatch({ type: LOGIN_FAILURE, payload: error });
+  const status = error?.response?.status;
+  const message = (error?.response?.data && (error.response.data.message || error.response.data.error)) || error.message || '';
+  const lowerMsg = (message || '').toLowerCase();
+  // heuristics
+  const userNotFound = status === 404 || /user not found|no such user|not registered|email does not exist/i.test(lowerMsg);
+  const wrongPassword = /invalid password|bad credentials|password mismatch|wrong password/i.test(lowerMsg) && !userNotFound;
+  const wrongEmailFormat = /invalid email|email format/i.test(lowerMsg);
+  const genericInvalid = status === 401 || status === 403 || /invalid credentials|unauthorized/i.test(lowerMsg);
+    try {
+      if (userNotFound) {
+        dispatch(addLocalNotification({ type: 'toast', title: 'Invalid Credentials', body: 'User does not exist. Register first.', data: { level: 'error', context: 'login', action: 'suggest-register' } }));
+      } else if (wrongPassword) {
+        dispatch(addLocalNotification({ type: 'toast', title: 'Invalid Password', body: 'Enter correct password.', data: { level: 'error', context: 'login' } }));
+      } else if (wrongEmailFormat) {
+        dispatch(addLocalNotification({ type: 'toast', title: 'Invalid Email', body: 'Enter a valid email address.', data: { level: 'error', context: 'login' } }));
+      } else if (genericInvalid) {
+        dispatch(addLocalNotification({ type: 'toast', title: 'Invalid Credentials', body: 'Check email & password.', data: { level: 'error', context: 'login' } }));
+      } else {
+        dispatch(addLocalNotification({ type: 'toast', title: 'Login Error', body: 'Unable to login.', data: { level: 'error', context: 'login' } }));
+      }
+    } catch (e) { /* ignore */ }
     console.log("Error in loginUser action:", error);
   }
 };
@@ -240,8 +273,18 @@ export const logout = () => async (dispatch) => {
   // clear axios default Authorization header if set
   try { if (api && api.defaults && api.defaults.headers) delete api.defaults.headers.common['Authorization']; } catch(e) {}
 
+  // capture profile before clearing so we can personalize message
+  let profileName = null;
+  try { const raw = localStorage.getItem('user_profile'); if (raw) { const p = JSON.parse(raw); profileName = p.fullName || p.name || p.username || p.email || null; } } catch(e) { /* ignore */ }
   dispatch({ type: LOGOUT });
-    console.log("logout successful");
+  try {
+    if (profileName) {
+      dispatch(addLocalNotification({ type: 'toast', title: `Logout Successful`, body: `${profileName} has been logged out.`, data: { level: 'error', context: 'logout' } }));
+    } else {
+      dispatch(addLocalNotification({ type: 'toast', title: 'Logout Successful', body: 'Logged out.', data: { level: 'error', context: 'logout' } }));
+    }
+  } catch(e) { /* ignore */ }
+  console.log("logout successful");
   } catch (error) {
     
     console.log("Error in logout action:", error);
