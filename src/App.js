@@ -1,14 +1,9 @@
 import { ThemeProvider } from "@emotion/react";
 import "./App.css";
-import { Navbar } from "./component/Navbar/Navbar";
 import { darkTheme } from "./Theme/DarkTheme";
 import { CssBaseline } from "@mui/material";
-import { Home } from "./component/Home/Home";
-import RestaurantDetails from "./component/Restaurant/RestaurantDetails";
-import { Cart } from "./component/Cart/Cart";
-import Profile from "./component/Profile/Profile";
-import CustomerRoute from "./Routers/CustomerRoute";
 import { useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./component/State/Authentication/Action";
 import { findCart } from "./component/State/Cart/Action";
@@ -41,12 +36,13 @@ function clearAppLocalStorage() {
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
   // Prefer sessionStorage (survives refresh, cleared on tab close) and fall back to localStorage
   const jwt = sessionStorage.getItem('jwt') || localStorage.getItem("jwt");
   const { auth } = useSelector((store) => store);
   useEffect(() => {
     const tokenToUse = auth.jwt || jwt;
-    dispatch(getUser(tokenToUse));
+    dispatch(getUser(tokenToUse, { hydrating: true }));
     dispatch(findCart(tokenToUse));
   }, [auth.jwt, dispatch, jwt]);
 
@@ -106,9 +102,12 @@ function App() {
 
   }, [auth.user, auth.jwt, dispatch, jwt]);
 
+  // Determine if current path is under admin (restaurant side)
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
-    // add top padding so fixed navbar doesn't cover page content
-    <div className="pt-16">
+    // Only add top padding for customer side where Navbar is present
+    <div className={isAdminRoute ? '' : 'pt-16'}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
 

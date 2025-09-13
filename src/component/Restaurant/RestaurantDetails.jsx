@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MenuCard from "./MenuCard";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getRestaurantByID,
@@ -29,7 +29,6 @@ const foodTypes = [
 
 const RestaurantDetails = () => {
   const [foodType, setFoodType] = useState("all");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   // Use correct selector for restaurant and categories
@@ -270,11 +269,7 @@ const RestaurantDetails = () => {
               <LocationOnIcon />
               <span>
                 {restaurantData.address
-                  ? `${restaurantData.address.streetAddress || ""}, ${
-                      restaurantData.address.city || ""
-                    }, ${restaurantData.address.stateProvince || ""}, ${
-                      restaurantData.address.postalCode || ""
-                    }`
+                  ? `${(restaurantData.address.streetAddress || restaurantData.address.street || "").trim()}${restaurantData.address.city ? ", " + restaurantData.address.city : ""}${restaurantData.address.stateProvince ? ", " + restaurantData.address.stateProvince : ""}${restaurantData.address.postalCode ? ", " + restaurantData.address.postalCode : ""}`
                   : "123 Main Street, City, State, 12345"}
               </span>
             </p>

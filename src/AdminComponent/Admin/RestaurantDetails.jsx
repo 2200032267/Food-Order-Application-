@@ -133,7 +133,8 @@ export const RestaurantDetails = () => {
                   <p className="w-48">Street Address</p>
                   <p className="text-gray-400">
                     <span className="pr-5">-</span>
-                    {current?.address?.streetAddress || "N/A"}
+                    {/* Prefer explicit streetAddress, fallback to street, then show N/A */}
+                    {current?.address?.streetAddress || current?.address?.street || "N/A"}
                   </p>
                 </div>
                

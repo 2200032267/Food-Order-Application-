@@ -24,7 +24,7 @@ export const Toasts = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    const timers = toasts.map(t => setTimeout(() => handleDismiss(t.id), 4000));
+    const timers = toasts.map(t => setTimeout(() => handleDismiss(t.id), 2000));
     return () => { timers.forEach(id => clearTimeout(id)); };
   }, [toasts, handleDismiss]);
 
