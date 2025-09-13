@@ -107,3 +107,25 @@ During order creation a sanitized item snapshot is stored (`order_items_<orderId
 - Remove snapshot hydration once backend DTO is guaranteed.
 - Add pagination or infinite scroll for large order histories.
 - Expose currency configuration via environment variable for Stripe line item unit conversion.
+
+### Favorites Persistence & Isolation
+Favorites are now stored per-user instead of a single global `favorites` array that could leak between sessions:
+
+How it works:
+- After successful profile fetch (`getUser`), the user id is extracted and a scoped key `favorites_<userId>` is used.
+- Server favorites (if any) are treated as authoritative and merged with any locally cached scoped + legacy favorites without duplicates (union by id / restaurantId / _id).
+- The merged list is written back to `favorites_<userId>` and also mirrored to the legacy `favorites` key for backward compatibility with any older components still reading it.
+- On logout the legacy global `favorites` key and any auth/profile keys are removed so another user starting a fresh session does not see previous favorites.
+
+Migration Behavior:
+- If a legacy `favorites` key exists but no scoped key yet, its contents are merged into the new scoped storage at next login.
+- Legacy key is then removed (except for the compatibility mirror written after merge) preventing cross-user leakage.
+
+Adding / Removing Favorites:
+- Toggling a favorite calls the backend endpoint then updates Redux and rewrites both the scoped key and compatibility key.
+
+Developer Notes:
+- Scoped key pattern: `favorites_<userId>` where userId comes from `data.id || data._id || data.userId`.
+- To inspect in DevTools: `localStorage.getItem('favorites_<userId>')`.
+- To fully reset local favorites for a user (while signed in) you can manually clear the scoped key, then dispatch `getUser(jwt)` to repopulate from server.
+

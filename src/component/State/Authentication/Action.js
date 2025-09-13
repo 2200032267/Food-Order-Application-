@@ -126,25 +126,40 @@ export const getUser = (jwt) => async (dispatch) => {
     // - If server returns an empty array or no favorites, preserve local favorites.
     let mergedFavorites = [];
     try {
-      const localRaw = localStorage.getItem('favorites');
-      const localFavs = localRaw ? JSON.parse(localRaw) : [];
-      const serverFavs = Array.isArray(data?.favorites) ? data.favorites : [];
-      if (Array.isArray(serverFavs) && serverFavs.length > 0) {
-        // union by common id keys
-        const keyOf = (it) => {
-          if (!it) return '';
-          if (typeof it === 'object') return String(it.id || it._id || it.restaurantId || it.restaurant_id || it.rid || '');
-          return String(it);
-        };
-        const map = new Map();
-        serverFavs.forEach(it => map.set(keyOf(it), it));
-        Array.isArray(localFavs) && localFavs.forEach(it => { const k = keyOf(it); if (!map.has(k)) map.set(k, it); });
-        mergedFavorites = Array.from(map.values()).filter(x => x != null && keyOf(x) !== '');
-      } else {
-        mergedFavorites = Array.isArray(localFavs) ? localFavs : [];
+      // user id (string) used for scoping favorites key
+      const uid = (data && (data.id || data._id || data.userId || data.user_id)) ? String(data.id || data._id || data.userId || data.user_id) : null;
+      const legacyRaw = localStorage.getItem('favorites');
+      let legacyFavs = [];
+      try { legacyFavs = legacyRaw ? JSON.parse(legacyRaw) : []; } catch (e) { legacyFavs = []; }
+      const scopedKey = uid ? `favorites_${uid}` : null;
+      let scopedFavs = [];
+      if (scopedKey) {
+        try {
+          const scopedRaw = localStorage.getItem(scopedKey);
+          scopedFavs = scopedRaw ? JSON.parse(scopedRaw) : [];
+        } catch (e) { scopedFavs = []; }
       }
+      const serverFavs = Array.isArray(data?.favorites) ? data.favorites : [];
+      const keyOf = (it) => {
+        if (!it) return '';
+        if (typeof it === 'object') return String(it.id || it._id || it.restaurantId || it.restaurant_id || it.rid || '');
+        return String(it);
+      };
+      const map = new Map();
+      // server favorites first (authoritative)
+      serverFavs.forEach(it => map.set(keyOf(it), it));
+      // then scoped stored favorites
+      scopedFavs.forEach(it => { const k = keyOf(it); if (k && !map.has(k)) map.set(k, it); });
+      // then legacy if still present
+      legacyFavs.forEach(it => { const k = keyOf(it); if (k && !map.has(k)) map.set(k, it); });
+      mergedFavorites = Array.from(map.values()).filter(x => x && keyOf(x));
+      // persist under scoped key only; remove legacy global key (migration)
+      if (scopedKey) {
+        try { localStorage.setItem(scopedKey, JSON.stringify(mergedFavorites)); } catch (e) { /* ignore */ }
+      }
+      try { localStorage.removeItem('favorites'); } catch (e) { /* ignore */ }
     } catch (e) {
-      mergedFavorites = Array.isArray(data?.favorites) && data.favorites.length > 0 ? data.favorites : (localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : []);
+      mergedFavorites = Array.isArray(data?.favorites) && data.favorites.length > 0 ? data.favorites : [];
     }
 
     // attach merged favorites to the profile payload so Redux receives the canonical list
@@ -157,11 +172,8 @@ export const getUser = (jwt) => async (dispatch) => {
       if (profilePayload && profilePayload.role) localStorage.setItem('user_role', profilePayload.role);
     } catch (e) { /* ignore */ }
     // persist the merged favorites (if any)
-    try {
-      if (Array.isArray(mergedFavorites) && mergedFavorites.length > 0) {
-        localStorage.setItem('favorites', JSON.stringify(mergedFavorites));
-      }
-    } catch (e) { /* ignore */ }
+    // For backward compatibility some components still read 'favorites' directly; write a lightweight copy
+    try { localStorage.setItem('favorites', JSON.stringify(mergedFavorites || [])); } catch (e) { /* ignore */ }
     console.log("user profile data:", data);
   } catch (error) {
     dispatch({ type: GET_USER_FAILURE, payload: error });
@@ -217,11 +229,8 @@ export const addToFavorite = ({ jwt, restaurantId }) => async (dispatch, getStat
 export const logout = () => async (dispatch) => {
  
   try {
-  // remove only auth/profile related keys so app-level caches remain intact
-  // Keep 'favorites' persisted so users don't lose their saved favorites across
-  // logout/login cycles. The server-stored favorites are fetched on login via getUser.
-  const keys = ['user_profile','user_role','local_cart_v1','localNotifications','cachedOrders_v1','knownOrderStatuses_v1','seenEvents_v1'];
-  // remove localStorage keys (keep 'favorites')
+  // remove auth/profile related keys AND legacy global favorites to avoid leakage to next user
+  const keys = ['user_profile','user_role','local_cart_v1','localNotifications','cachedOrders_v1','knownOrderStatuses_v1','seenEvents_v1','favorites'];
   keys.forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
   // remove JWT from both storages
   try { localStorage.removeItem('jwt'); } catch(e) {}

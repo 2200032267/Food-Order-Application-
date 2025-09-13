@@ -98,9 +98,7 @@ export const authReducer = (state = inititalState, action) => {
         };
       }
     case LOGOUT:
-      // On logout we want the UI to stop showing favorites immediately.
-      // Keep the persisted 'favorites' key in localStorage untouched so the
-      // client's saved favorites can be restored on the next login via getUser.
+      // On logout: clear in-memory favorites (and logout action now removes both legacy and scoped favorites keys)
       return {
         ...inititalState,
         user: null,
