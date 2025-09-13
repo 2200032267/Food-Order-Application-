@@ -68,3 +68,42 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Project Customizations
+
+### Inactivity Auto-Logout
+The application automatically logs a user out after 3 minutes of no activity (no mouse / keyboard / visibility). The timer resets on user activity. Adjust the timeout or events in `src/index.js` where the handlers are registered.
+
+### Option A: Stripe Multi-Line Item Support
+When creating an order, the frontend now derives a `stripeLineItems` array from the sanitized order items and includes it in the POST `/api/order` payload. Each element:
+```
+{
+	name: string,
+	quantity: number,
+	unit_amount: integer (smallest currency unit),
+	productId: string|number
+}
+```
+Backend can use this directly to create a Stripe Checkout Session. (Assumes prices are in INR; adjust multiplier in `createOrder` if using a different currency or a price already in smallest denomination.)
+
+### Option B: Order DTO Normalization
+Orders returned from `/api/order/user` are normalized to a consistent shape via `orderNormalizer.js`:
+```
+{
+	id, status, totalPrice, createdAt, items: [ { id, productId, name, quantity, unitPrice, totalPrice, imageUrl } ]
+}
+```
+This allows UI components (`Orders.jsx`, `OrderCard.jsx`) to assume stable fields and removes scattered fallback logic. Legacy fields are still preserved on the order object for backward compatibility.
+
+### Local Order Item Snapshots (Fallback)
+During order creation a sanitized item snapshot is stored (`order_items_<orderId>`). If the backend responds without line items (lazy load or serialization gap) the fetch logic hydrates them locally. This can be removed once the backend always returns items in its DTO.
+
+### Where to Adjust
+- Stripe mapping: `src/component/State/Order/Action.js` inside `createOrder` (search for `stripeLineItems`).
+- Normalization: `src/component/State/Order/orderNormalizer.js`.
+- Orders UI: `src/component/Profile/Orders.jsx` & `OrderCard.jsx` rely on normalized fields.
+
+### Future Clean-Up Ideas
+- Remove snapshot hydration once backend DTO is guaranteed.
+- Add pagination or infinite scroll for large order histories.
+- Expose currency configuration via environment variable for Stripe line item unit conversion.

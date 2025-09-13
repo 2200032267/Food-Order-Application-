@@ -6,7 +6,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { createEventAction } from "../../component/State/Restaurant/Action";
+import { createEventAction, getRestaurantsEvents, deleteEventAction } from "../../component/State/Restaurant/Action";
+import { EventCard } from "../../component/Profile/EventCard";
 
 // initial form values reused to reset the form after submit
 const initialFormValues = {
@@ -38,22 +39,29 @@ export const Events = () => {
     
     const jwt = localStorage.getItem("jwt");
     const { restaurant} = useSelector((store) => store);
+    const restaurantEvents = restaurant?.restaurantEvents || [];
 
-  const handleSubmit = (e) => {
+  React.useEffect(() => {
+    const restId = restaurant?.usersRestaurants?.[0]?.id;
+    if (restId) dispatch(getRestaurantsEvents({ restaurantId: restId, jwt }));
+  }, [restaurant?.usersRestaurants, dispatch, jwt]);
+
+    const handleSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     // format dates before sending
     const payload = {
       ...formValues,
-      startedAt: formValues.startedAt ? dayjs(formValues.startedAt).format("MMMM DD, YYYY hh:mm A") : null,
-      endsAt: formValues.endsAt ? dayjs(formValues.endsAt).format("MMMM DD, YYYY hh:mm A") : null,
+      // send ISO strings so backend LocalDateTime parses reliably
+      startedAt: formValues.startedAt ? dayjs(formValues.startedAt).toISOString() : null,
+      endsAt: formValues.endsAt ? dayjs(formValues.endsAt).toISOString() : null,
     };
     // eslint-disable-next-line no-console
     console.log("Submitting event:", payload);
     dispatch(createEventAction({
-      data:formValues,
-      restaurantId: restaurant?.usersRestaurants?.[0]?.id, 
-      jwt       
-    }))
+      data: payload,
+      restaurantId: restaurant?.usersRestaurants?.[0]?.id,
+      jwt,
+    }));
   // TODO: send payload to backend
   // close modal and reset form so the button can open a fresh form
   setFormValues(initialFormValues);
@@ -72,6 +80,22 @@ export const Events = () => {
     <div>
       <div className="p-5">
         <Button onClick={handleOpen} variant="contained">Create New Event</Button>
+        <div className="mt-6">
+          {restaurantEvents.length === 0 ? (
+            <p className="text-gray-400">No events created for this restaurant.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {restaurantEvents.map((ev) => (
+                <EventCard
+                  key={ev.id || ev._id}
+                  event={ev}
+                  canDelete={true}
+                  onDelete={(id) => dispatch(deleteEventAction({ eventId: id, jwt }))}
+                />
+              ))}
+            </div>
+          )}
+        </div>
         <Modal
           open={open}
           onClose={handleClose}

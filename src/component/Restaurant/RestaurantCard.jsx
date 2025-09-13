@@ -11,29 +11,29 @@ const RestaurantCard = ({item}) => {
   const navigate=useNavigate();
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const {auth} = useSelector(store=>store);
+  // select only auth slice to avoid returning the whole store
+  const auth = useSelector((state) => state.auth) || {};
 
   const handleAddToFavorite = () => {
     if (!item.id) {
       console.error("Restaurant ID is missing:", item);
       return;
     }
-    console.log("Adding to favorites - Restaurant ID:", item.id);
+  console.log("Toggling favorite - Restaurant ID:", item.id);
     dispatch(addToFavorite({restaurantId: item.id, jwt}));
   }
     const handleNavigateToRestaurant = () => {
-    if (item.open) {
-      navigate(`/restaurant/${item.address.city}/${item.name}/${item.id}`);
-    }
-  };
+      const city = item?.address?.city || "unknown";
+      const name = item?.name || "unknown";
+      const id = item?.id || item?._id || "unknown";
+      navigate(`/restaurant/${city}/${name}/${id}`);
+    };
   return (
     <div>
       <Card className="w-[18rem]">
         <div
-          className={`${
-            true ? "cursor-pointer" : "cursor-not-allowed"
-          } relative`}
-          onClick={() => navigate(`/restaurant/${item.address.city}/${item.name}/${item.id}`)}
+          className="cursor-pointer relative"
+          onClick={handleNavigateToRestaurant}
         >
           <img
             className="w-full h-[10rem] rounded-t-md object-cover"
@@ -56,7 +56,7 @@ const RestaurantCard = ({item}) => {
             </div>
             <div>
                 <IconButton onClick={handleAddToFavorite}>
-                    {isPresentInFavorites(auth.favorites,item) ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
+                    {isPresentInFavorites(Array.isArray(auth.favorites) ? auth.favorites : [], item) ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
                 </IconButton>
             </div>
 

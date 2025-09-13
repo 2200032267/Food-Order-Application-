@@ -4,9 +4,10 @@ import { CartItem } from "./CartItem";
 import { AddressCard } from "./AddressCard";
 import { Button, Card } from "@mui/material";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../State/Order/Action";
+import { createAddress, getAddresses, selectAddress } from "../State/Address/Action";
 
 //import * as Yup from "yup";
 
@@ -35,44 +36,118 @@ const initialValues = {
 
 //     city: Yup.string().required("City is required"),
 // })
-const handleSubmit = () => {};
-
-
+// removed unused local handleSubmit stub
 
 export const Cart = () => {
-  const createOrderUsingSelectedAdress = () => {};
+  const addresses = useSelector((state) => state.addresses) || { list: [], selected: null };
+  const createOrderUsingSelectedAdress = (address) => {
+    if(!address) return;
+    dispatch(selectAddress(address));
+  };
   const handleOpenAdressModel = () => {
     setOpen(true);
   };
   const [open, setOpen] = React.useState(false);
-  const {cart,auth}=useSelector((store) => store);
+  const cart = useSelector((state) => state.cart) || { cartItems: [] };
+  const auth = useSelector((state) => state.auth) || {};
   const dispatch=useDispatch();
   const handleClose = () => setOpen(false);
-  const handleSubmit = (values) => {
+  const handleSubmit = (values,{resetForm}) => {
+    const jwt = localStorage.getItem("jwt");
     const data = {
-      token: localStorage.getItem("jwt"),
-      order: {
-        restaurantId: cart?.cartItems?.[0]?.food?.restaurant?.id,
-        deliveryAddress: {
-          fullName: auth.user?.fullName,
-          streetAddress: values.streetAddress,
-          city: values.city,
-          state: values.state,
-          postalCode: values.pincode,
-          country: "india",
-        },
-      },
+      streetAddress: values.streetAddress,
+      city: values.city,
+      state: values.state,
+      postalCode: values.pincode,
+      country: "india",
+      fullName: auth.user?.fullName,
     };
-
-    dispatch(createOrder(data));
-    console.log("form value ", values);
+    dispatch(createAddress({ jwt, data }));
+    resetForm();
+    handleClose();
   };
+
+  const authJwt = useSelector((s) => (s.auth && s.auth.jwt) || null);
+  React.useEffect(()=>{
+    if(authJwt){
+      dispatch(getAddresses({jwt: authJwt}));
+    }
+  },[dispatch, authJwt]);
+
+  // Normalize cart items so components can rely on top-level convenience fields
+  const normalizedItems = (cart?.cartItems || []).map((it) => {
+    const food = it.food || {};
+    const name = it.name || food.name || it.foodName || "";
+    const images = it.images || food.images || (it.image && [it.image]) || it.foodImages || [];
+    const price = Number(it.price ?? food.price ?? it.totalPrice ?? 0);
+    return { ...it, food, name, images, price };
+  });
+
+  // compute subtotal once and reuse; prevents placing orders with zero total
+  const subtotal = normalizedItems.reduce((s, it) => s + (Number(it.totalPrice || it.price) || 0), 0);
+
+  const placeOrder = () => {
+  const jwt = authJwt;
+    if(!addresses.selected){
+      return;
+    }
+    const safeAddress = {
+  street: addresses.selected.street || addresses.selected.streetAddress || "",
+  city: addresses.selected.city || "",
+  state: addresses.selected.state || "",
+  postalCode: addresses.selected.postalCode || "",
+  country: addresses.selected.country || "India",
+  // include id if present so backend can reuse existing address instead of creating duplicates
+  ...(addresses.selected.id ? { id: addresses.selected.id } : {}),
+  ...(addresses.selected._id ? { id: addresses.selected._id } : {}),
+    };
+    // compute pricing breakdown and build items array so backend receives full order
+    const subtotal = normalizedItems.reduce((s,it)=>s+(Number(it.totalPrice||it.price)||0),0);
+    const deliveryFee = subtotal === 0 ? 0 : Math.min(99, Math.max(15, Math.round(subtotal * 0.07)));
+    const platformFee = subtotal === 0 ? 0 : Math.min(49, Math.round(subtotal * 0.03) + 5);
+    const tax = subtotal === 0 ? 0 : Math.round(subtotal * 0.05);
+    const total = subtotal + deliveryFee + platformFee + tax;
+
+    const items = (normalizedItems || []).map(it => ({
+      // provide multiple fallback keys for server compatibility
+      productId: it.food?.id || it.food?._id || it.id,
+      foodId: it.food?.id || it.food?._id || it.id,
+      menuId: it.menuId || undefined,
+      name: it.name || undefined,
+      quantity: Number(it.quantity || it.qty || it.count || 1),
+      unitPrice: Number(it.price || 0),
+      totalPrice: Number(it.totalPrice || it.price || 0),
+    }));
+
+    const restaurantId = normalizedItems?.[0]?.food?.restaurant?.id || normalizedItems?.[0]?.restaurant?.id;
+    if (!restaurantId) {
+      console.error('placeOrder failed: missing restaurantId. payload items:', normalizedItems);
+      return;
+    }
+
+    const data = {
+      token: jwt,
+      order: {
+        // prefer nested restaurant on food, fall back to top-level restaurant if present
+        restaurantId,
+        deliveryAddress: safeAddress,
+        customerName: auth.user?.fullName || auth.user?.name || undefined,
+        subtotal,
+        deliveryFee,
+        platformFee,
+        tax,
+        total,
+        items,
+      }
+  };
+    dispatch(createOrder(data));
+  }
 
   return (
     <>
       <main className="lg:flex justify-between">
         <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-          {(cart?.cartItems || []).map((item) => (
+          {normalizedItems.map((item) => (
             <CartItem key={item?.id || Math.random()} item={item} />
           ))}
 
@@ -82,26 +157,37 @@ export const Cart = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-grey-400">
                 <p>Item Total</p>
-                <p>₹{cart?.cart?.total}</p>
+                <p>₹{subtotal}</p>
               </div>
-              <div className="flex justify-between text-grey-400">
-                <p>Delivery Fee</p>
-                <p>₹49</p>
-              </div>
-              <div className="flex justify-between text-grey-400">
-                <p>PlatForm Fee</p>
-                <p>₹19</p>
-              </div>
-              <div className="flex justify-between text-grey-400">
-                <p>Gst and restaurant charges</p>
-                <p>₹29</p>
-              </div>
-              <Divider />
+              {(() => {
+                const base = subtotal;
+                const deliveryFee = base === 0 ? 0 : Math.min(99, Math.max(15, Math.round(base * 0.07)));
+                const platformFee = base === 0 ? 0 : Math.min(49, Math.round(base * 0.03) + 5);
+                const tax = base === 0 ? 0 : Math.round(base * 0.05); // 5% GST approximation
+                const grand = base + deliveryFee + platformFee + tax;
+                return (
+                  <>
+                    <div className="flex justify-between text-grey-400">
+                      <p>Delivery Fee</p>
+                      <p>₹{deliveryFee}</p>
+                    </div>
+                    <div className="flex justify-between text-grey-400">
+                      <p>Platform Fee</p>
+                      <p>₹{platformFee}</p>
+                    </div>
+                    <div className="flex justify-between text-grey-400">
+                      <p>GST & Charges</p>
+                      <p>₹{tax}</p>
+                    </div>
+                    <Divider />
+                    <div className="flex justify-between text-grey-400 font-semibold">
+                      <p>Total pay</p>
+                      <p>₹{grand}</p>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
-              <div className="flex justify-between text-grey-400">
-                <p>Total pay</p>
-                <p>₹{(cart?.cart?.total ?? 0) + 49 + 19 + 29}</p>
-              </div>
           </div>
         </section>
         <Divider orientation="vertical" flexItem />
@@ -111,8 +197,9 @@ export const Cart = () => {
               Choose Delivery Address
             </h1>
             <div className="flex gap-5 flex-wrap justify-center">
-              {[1, 1, 1, 1, 1].map((item) => (
+                {(addresses.list || []).map((item) => (
                 <AddressCard
+                  key={item.id}
                   handleselectAddress={createOrderUsingSelectedAdress}
                   item={item}
                   showButton={true}
@@ -134,6 +221,16 @@ export const Cart = () => {
                   </Button>
                 </div>
               </Card>
+            </div>
+            <div className="pt-8 flex justify-center">
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled={!addresses.selected || normalizedItems.length===0 || subtotal===0}
+                onClick={placeOrder}
+              >
+                Place Order
+              </Button>
             </div>
           </div>
         </section>
@@ -213,9 +310,16 @@ export const Cart = () => {
                   type="submit"
                   color="primary"
                 >
-                  Delivery Here
+                  Save Address
                 </Button>
               </Grid>
+              {addresses.selected && (
+                <Grid item xs={12}>
+                  <Button fullWidth variant="contained" color="success" onClick={placeOrder}>
+                    Place Order To This Address
+                  </Button>
+                </Grid>
+              )}
             </Grid>
             </Form>
           </Formik>

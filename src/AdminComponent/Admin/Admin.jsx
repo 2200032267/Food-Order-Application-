@@ -35,7 +35,7 @@ const Admin = () => {
         <div>
           <AdminSideBar handleClose={handleClose} />
         </div>
-        <div className="lg:w-[80%]">
+  <div className="lg:w-[80%] pt-16">
           <Routes>
             <Route path="/" element={<RestaurantDashboard />} />
             <Route path="/orders" element={<Orders />} />

@@ -9,23 +9,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Button } from "@mui/material";
 import { categorizeIngredients } from "../utils/categrizeIngredients";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "../State/Cart/Action";
 
-const demo = [
-  {
-    category: "Nuts & Seeds",
-    ingredients: ["almonds", "walnuts", "chia seeds"],
-  },
-  {
-    category: "Protein",
-    ingredients: ["chicken", "tofu", "lentils"],
-  },
-];
 
 const MenuCard = ({ item }) => {
   const [selectedIngredients, setSelectedIngredients] = React.useState([]);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth) || {};
   const handleCheckboxChange = (itemName) => {
     console.log("value");
     if (selectedIngredients.includes(itemName)) {
@@ -38,13 +29,15 @@ const MenuCard = ({ item }) => {
   };
   const handleAddItemToCart = (e) => {
     e.preventDefault();
+  const token = (auth && auth.jwt) || localStorage.getItem("jwt");
     const reqData = {
-      token: localStorage.getItem("jwt"),
+      token,
       cartItem: {
         foodId: item.id,
 
         quantity: 1,
-        ingredients: selectedIngredients,
+  ingredients: selectedIngredients,
+  price: item.price || item.foodPrice || 0,
       },
     };
     dispatch(addItemToCart(reqData));

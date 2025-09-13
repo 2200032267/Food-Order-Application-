@@ -1,4 +1,5 @@
 import { api } from "../../config/api";
+import { addLocalNotification } from '../Notification/Action';
 import { getUserFriendlyErrorMessage, isConstraintViolation } from "../../config/errorHandler";
 
 // import {
@@ -64,8 +65,8 @@ export const getAllRestaurantsAction = (token) => {
       const { data } = await api.get("api/restaurants", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      dispatch({ type: GET_ALL_RESTAURANTS_SUCCESS, payload: data });
-      console.log("All Restaurants:", data);
+  dispatch({ type: GET_ALL_RESTAURANTS_SUCCESS, payload: data });
+  if (process.env.NODE_ENV !== 'production') console.log("All Restaurants:", data);
     } catch (error) {
       console.error("Error fetching all restaurants:", error);
       dispatch({
@@ -80,7 +81,7 @@ export const getRestaurantByID = (reqData) => {
   return async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
     try {
-      console.log("Fetching restaurant with ID:", reqData.restaurantId);
+  if (process.env.NODE_ENV !== 'production') console.log("Fetching restaurant with ID:", reqData.restaurantId);
       const response = await api.get(
         `api/restaurants/${reqData.restaurantId}`,
         {
@@ -91,7 +92,7 @@ export const getRestaurantByID = (reqData) => {
         type: GET_RESTAURANT_BY_ID_SUCCESS,
         payload: response.data,
       });
-      console.log("Restaurant fetched successfully:", response.data);
+      if (process.env.NODE_ENV !== 'production') console.log("Restaurant fetched successfully:", response.data);
     } catch (error) {
       console.error("Error fetching restaurant by ID:", error);
       console.error("Error response:", error.response?.data);
@@ -110,15 +111,25 @@ export const getRestaurantByUserId = (jwt) => {
       const { data } = await api.get(`api/admin/restaurants/user`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-      console.log("Restaurant by User ID:", data);
+  if (process.env.NODE_ENV !== 'production') console.log("Restaurant by User ID:", data);
       dispatch({
         type: GET_RESTAURANT_BY_USER_ID_SUCCESS,
         payload: data,
       });
     } catch (error) {
-      if (error?.response?.status === 404) {
+      const status = error?.response?.status;
+      if (status === 404) {
         console.warn("No restaurant found for user (404)");
         // treat as success with null payload -> reducer normalizes to []
+        dispatch({
+          type: GET_RESTAURANT_BY_USER_ID_SUCCESS,
+          payload: null,
+        });
+      } else if (status === 403) {
+        // Forbidden: token may be valid but lacks restaurant-owner privileges.
+        // Treat this gracefully: log a clear warning and return success with null
+        // so caller can continue without treating this as an error state.
+        console.warn("Access denied to admin restaurant endpoint (403). User likely lacks owner privileges.");
         dispatch({
           type: GET_RESTAURANT_BY_USER_ID_SUCCESS,
           payload: null,
@@ -135,13 +146,13 @@ export const getRestaurantByUserId = (jwt) => {
 };
 
 export const createRestaurant = (reqData) => {
-  console.log("Creating restaurant with data:", reqData.token);
+  if (process.env.NODE_ENV !== 'production') console.log("Creating restaurant with data:", reqData.token);
   return async (dispatch) => {
     dispatch({ type: CREATE_RESTAURANT_REQUEST });
     try {
       // log outgoing payload for debugging server 500s
-      // eslint-disable-next-line no-console
-      console.log("POST api/admin/restaurants payload:", reqData.data);
+  // eslint-disable-next-line no-console
+  if (process.env.NODE_ENV !== 'production') console.log("POST api/admin/restaurants payload:", reqData.data);
       const { data } = await api.post("api/admin/restaurants", reqData.data, {
         headers: { Authorization: `Bearer ${reqData.token}` },
       });
@@ -149,18 +160,20 @@ export const createRestaurant = (reqData) => {
         type: CREATE_RESTAURANT_SUCCESS,
         payload: data,
       });
-      console.log("Restaurant created successfully:", data);
+      if (process.env.NODE_ENV !== 'production') console.log("Restaurant created successfully:", data);
   // return created restaurant so callers can await and react
   return data;
     } catch (error) {
-      console.log("Error creating restaurant:", error);
-      console.log("Error response data:", error.response?.data);
-      console.log("Error status:", error.response?.status);
+  console.log("Error creating restaurant:", error);
+  if (process.env.NODE_ENV !== 'production') console.log("Error response data:", error.response?.data);
+  if (process.env.NODE_ENV !== 'production') console.log("Error status:", error.response?.status);
       
       // Handle specific constraint violation errors
       if (isConstraintViolation(error)) {
-        console.error("DUPLICATE RESTAURANT ERROR: A restaurant with this information already exists");
-        console.error("Constraint violation:", error.response?.data?.message);
+        if (process.env.NODE_ENV !== 'production') {
+          console.error("DUPLICATE RESTAURANT ERROR: A restaurant with this information already exists");
+          console.error("Constraint violation:", error.response?.data?.message);
+        }
         
         // Create a more user-friendly error message
         const userFriendlyError = {
@@ -201,7 +214,7 @@ export const updateRestaurant = ({ restaurantId, restaurantData, jwt }) => {
         type: UPDATE_RESTAURANT_STATUS_SUCCESS,
         payload: res.data,
       });
-      console.log("Restaurant updated successfully:", res);
+  if (process.env.NODE_ENV !== 'production') console.log("Restaurant updated successfully:", res);
     } catch (error) {
       console.error("Error updating restaurant:", error);
       dispatch({
@@ -219,7 +232,7 @@ export const deleteRestaurant = ({ restaurantId, jwt }) => {
       const res = await api.delete(`api/admin/restaurant/${restaurantId}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-      console.log("Delete response:", res.data);
+  if (process.env.NODE_ENV !== 'production') console.log("Delete response:", res.data);
       dispatch({
         type: DELETE_RESTAURANT_SUCCESS,
         payload: restaurantId,
@@ -245,7 +258,7 @@ export const updateRestaurantStatus = ({ restaurantId, jwt }) => {
           headers: { Authorization: `Bearer ${jwt}` },
         }
       );
-      console.log("Update response:", res.data);
+  if (process.env.NODE_ENV !== 'production') console.log("Update response:", res.data);
       dispatch({
         type: UPDATE_RESTAURANT_STATUS_SUCCESS,
         payload: res.data,
@@ -263,6 +276,15 @@ export const updateRestaurantStatus = ({ restaurantId, jwt }) => {
 export const createEventAction = ({ data, jwt, restaurantId }) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_EVENTS_REQUEST });
+    // optimistic local notification so user sees it immediately
+    try {
+      dispatch(addLocalNotification({
+        type: 'event',
+  title: data.name || data.title || 'New event',
+  body: data.description || '',
+  data: { event: data, eventId: data.id || data._id || data.eventId },
+      }));
+  } catch (e) { if (process.env.NODE_ENV !== 'production') console.warn('optimistic local notification failed', e); }
     try {
       const res = await api.post(
         `api/admin/events/restaurant/${restaurantId}`,
@@ -271,11 +293,19 @@ export const createEventAction = ({ data, jwt, restaurantId }) => {
           headers: { Authorization: `Bearer ${jwt}` },
         }
       );
-      console.log("Event created successfully:", res.data);
+  if (process.env.NODE_ENV !== 'production') console.log("Event created successfully:", res.data);
       dispatch({
         type: CREATE_EVENTS_SUCCESS,
         payload: res.data,
       });
+      try {
+        dispatch(addLocalNotification({
+          type: 'event',
+          title: res.data.name || res.data.title || 'New event',
+          body: res.data.description || '',
+          data: { event: res.data, eventId: res.data.id || res.data._id || res.data.eventId },
+        }));
+  } catch (e) { if (process.env.NODE_ENV !== 'production') console.warn('local notification failed', e); }
     } catch (error) {
       console.error("Error creating event:", error);
       dispatch({
@@ -293,11 +323,45 @@ export const getAllEvents = ({ jwt }) => {
       const res = await api.get(`api/events`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-      console.log("All events fetched successfully:", res.data);
-      dispatch({
-        type: GET_ALL_EVENTS_SUCCESS,
-        payload: res.data,
-      });
+  if (process.env.NODE_ENV !== 'production') console.log("All events fetched successfully:", res.data);
+      const events = res.data || [];
+
+      // Detect new events compared to locally-seen event ids stored in localStorage.
+      // This allows customer clients to get a local notification when a new event appears
+      // even if the server-side notifications endpoint is not creating notifications.
+      try {
+        const seenKey = 'seenEvents_v1';
+        const seenRaw = localStorage.getItem(seenKey) || '[]';
+        const seen = Array.isArray(JSON.parse(seenRaw)) ? JSON.parse(seenRaw) : [];
+        const newIds = [];
+        const toNotify = [];
+        events.forEach(ev => {
+          const id = ev?.id || ev?._id || ev?.eventId;
+          if (!id) return;
+          if (!seen.includes(String(id))) {
+            newIds.push(String(id));
+            toNotify.push(ev);
+          }
+        });
+        if (toNotify.length > 0) {
+          // persist updated seen list
+          const updated = Array.from(new Set([...seen, ...newIds]));
+          localStorage.setItem(seenKey, JSON.stringify(updated));
+          // dispatch local notifications for each new event (customer view)
+          toNotify.forEach(ev => {
+            try {
+              dispatch(addLocalNotification({
+                type: 'event',
+                title: ev.name || ev.title || 'New event',
+                body: ev.description || ev.summary || '',
+                data: { event: ev, eventId: ev.id || ev._id || ev.eventId },
+              }));
+            } catch (e) { if (process.env.NODE_ENV !== 'production') console.warn('notify new event failed', e); }
+          });
+        }
+      } catch (e) { /* ignore localStorage parse errors */ }
+
+      dispatch({ type: GET_ALL_EVENTS_SUCCESS, payload: events });
     } catch (error) {
       console.error("Error fetching all events:", error);
       dispatch({
@@ -315,7 +379,7 @@ export const deleteEventAction = ({ eventId, jwt }) => {
       const res = await api.delete(`api/admin/events/${eventId}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-      console.log("Event deleted successfully:", res.data);
+  if (process.env.NODE_ENV !== 'production') console.log("Event deleted successfully:", res.data);
       dispatch({
         type: DELETE_EVENTS_SUCCESS,
         payload: eventId,
@@ -337,7 +401,7 @@ export const getRestaurantsEvents = ({ restaurantId, jwt }) => {
       const res = await api.get(`api/admin/events/restaurant/${restaurantId}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-      console.log("Restaurants events fetched successfully:", res.data);
+  if (process.env.NODE_ENV !== 'production') console.log("Restaurants events fetched successfully:", res.data);
       dispatch({
         type: GET_RESTAURANTS_EVENT_SUCCESS,
         payload: res.data,

@@ -34,8 +34,8 @@ const RestaurantDetails = () => {
   const jwt = localStorage.getItem("jwt");
   // Use correct selector for restaurant and categories
 
-  const restaurant = useSelector((store) => store.restaurant);
-  const menuItemsRaw = useSelector((store) => store.menu.menuItems);
+  const restaurant = useSelector((state) => state.restaurant) || {};
+  const menuItemsRaw = useSelector((state) => (state.menu && state.menu.menuItems) ? state.menu.menuItems : []);
   const menuItems = React.useMemo(() => menuItemsRaw || [], [menuItemsRaw]);
   const categories = React.useMemo(() => (restaurant.categories || []), [restaurant.categories]);
   // local categories list with fallback derived from menuItems

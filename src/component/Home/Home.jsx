@@ -11,13 +11,15 @@ const restaurants = [1, 1, 1, 1, 1];
 export const Home = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const { restaurant } = useSelector((store) => store);
+  const restaurant = useSelector((state) => state.restaurant) || { restaurants: [] };
   const navigate = useNavigate();
   console.log(restaurant);
   useEffect(() => {
+    // If jwt is null or undefined, still attempt to fetch (backend may allow public listing)
+    // but include jwt in dependency so when a token is set after login the list will refresh.
     dispatch(getAllRestaurantsAction(jwt));
-    
-  }, []);
+
+  }, [dispatch, jwt]);
 
 
   return (
@@ -44,9 +46,10 @@ export const Home = () => {
           Order From Our HandPicked Favourites
         </h1>
         <div className="flex flex-wrap items-center justify-around gap-5">
-          {restaurant.restaurants.map((item, index) => {
+          {(Array.isArray(restaurant?.restaurants) ? restaurant.restaurants : []).map((item, index) => {
+            // defensive logging for debugging
             console.log(`Restaurant ${index}:`, item);
-            return <RestaurantCard key={item.id || index} item={item} />;
+            return <RestaurantCard key={item?.id || item?._id || index} item={item} />;
           })}
         </div>
       </section>

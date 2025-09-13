@@ -20,11 +20,33 @@ const inititalState = {
   isLoading: false,
   error: null,
   jwt: null,
-  favorites: [],
+  // restore persisted favorites from localStorage so they survive page reloads
+  favorites: (() => {
+    try {
+      const raw = localStorage.getItem('favorites');
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  })(),
   success: null,
 };
 
 export const authReducer = (state = inititalState, action) => {
+  // helper to normalize various shapes of favorites into an array
+  const normalizeFavorites = (f) => {
+    if (!f) return [];
+    if (Array.isArray(f)) return f;
+    if (f && Array.isArray(f.favorites)) return f.favorites;
+    if (typeof f === 'object') {
+      try {
+        const vals = Object.values(f).filter(v => v && typeof v === 'object');
+        if (vals.length > 0) return vals;
+      } catch (e) { /* ignore */ }
+    }
+    return [];
+  };
+
   switch (action.type) {
     case REGISTER_REQUEST:
     case LOGIN_REQUEST:
@@ -46,26 +68,46 @@ export const authReducer = (state = inititalState, action) => {
         success: "register successful",
       };
     case GET_USER_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-
-        user: action.payload,
-        favorites: action.payload.favorites,
-        
-        
-      };
+      {
+        const serverFavorites = normalizeFavorites(action.payload && action.payload.favorites);
+        // if server returned no favorites, keep any existing local favorites so a refresh
+        // doesn't wipe out client-side favorites that were stored while the user had a valid token
+        const finalFavorites = (serverFavorites && serverFavorites.length) ? serverFavorites : normalizeFavorites(state.favorites);
+        try { localStorage.setItem('favorites', JSON.stringify(finalFavorites)); } catch (e) {}
+        return {
+          ...state,
+          isLoading: false,
+          user: action.payload,
+          favorites: finalFavorites,
+        };
+      }
     case ADD_TO_FAVORITE_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-        error: null,
-        favorites: isPresentInFavorites(state.favorites, action.payload)
-          ? state.favorites.filter((item) => item.id !== action.payload.id)
-          : [action.payload, ...state.favorites],
-      };
+      {
+        const newFavorites = (() => {
+          const current = normalizeFavorites(state.favorites);
+          const present = isPresentInFavorites(current, action.payload);
+          if (present) return current.filter((item) => (item && (item.id || item._id || '').toString()) !== (action.payload && (action.payload.id || action.payload._id || '').toString()));
+          return [action.payload, ...current];
+        })();
+        try { localStorage.setItem('favorites', JSON.stringify(newFavorites)); } catch(e){}
+        return {
+          ...state,
+          isLoading: false,
+          error: null,
+          favorites: newFavorites,
+        };
+      }
     case LOGOUT:
-        return inititalState;
+      // On logout we want the UI to stop showing favorites immediately.
+      // Keep the persisted 'favorites' key in localStorage untouched so the
+      // client's saved favorites can be restored on the next login via getUser.
+      return {
+        ...inititalState,
+        user: null,
+        jwt: null,
+        // empty the Redux favorites so the app renders as a logged-out user
+        favorites: [],
+      };
     case REGISTER_FAILURE:
     case LOGIN_FAILURE:
     case GET_USER_FAILURE:

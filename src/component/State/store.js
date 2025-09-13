@@ -8,6 +8,8 @@ import { orderReducer } from "./Order/Reducer";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
 import { ingredientsReducer } from "./Ingredients/Reducer";
 import restaurantReducer from "./Restaurant/Reducer";
+import { addressReducer } from "./Address/Reducer";
+import { notificationReducer } from "./Notification/Reducer";
 
 const rooteReducer =combineReducers ({
     auth:authReducer,
@@ -17,6 +19,8 @@ const rooteReducer =combineReducers ({
     order:orderReducer,
     restaurantOrder:restaurantOrderReducer,
     ingredients:ingredientsReducer,
+    addresses:addressReducer,
+    notification:notificationReducer,
     
 
 })

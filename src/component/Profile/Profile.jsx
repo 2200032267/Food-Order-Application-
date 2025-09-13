@@ -6,15 +6,17 @@ import Address from "./Address";
 import {Favorites} from "./Favorites";
 import Events from "./Events";
 import Orders from "./Orders";
+import Payment from "./Payment";
+import Notifications from "./Notifications";
 
 const Profile = () => {
-  const [openSideBar, setOpenSideBar] = React.useState(false);
+  const [openSideBar] = React.useState(false);
   return (
-    <div className="lg:flex justify-between">
-      <div className="sticky h-[80vh] lg:w-[20%]">
+    <div className="lg:flex">
+      <div className="lg:w-[240px]">
         <ProfileNavigation open={openSideBar} />
       </div>
-      <div className="lg:w-[80%]">
+      <div className="flex-1 pt-16">
         <Routes>
           <Route path="/" element={<UserProfile />} />
           <Route path="/orders" element={<Orders />} />
@@ -22,6 +24,8 @@ const Profile = () => {
           <Route path="/favourites" element={<Favorites />} />
 
           <Route path="/events" element={<Events />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Routes>
       </div>
     </div>

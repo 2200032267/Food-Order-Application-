@@ -11,6 +11,16 @@ const initialState = {
   categories: [],
 };
 
+// helper to ensure event objects have an `id` property frontend expects
+const normalizeEvent = (e) => {
+  if (!e) return e;
+  // prefer existing id, otherwise map _id to id
+  const id = e.id || e._id || (e._id ? String(e._id) : undefined);
+  return { ...e, id };
+};
+
+const normalizeEventsArray = (arr) => Array.isArray(arr) ? arr.map(normalizeEvent) : [];
+
 const restaurantReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.CREATE_RESTAURANT_REQUEST:
@@ -39,10 +49,15 @@ const restaurantReducer = (state = initialState, action) => {
         usersRestaurants: normalized,
       };}
     case actionTypes.GET_ALL_RESTAURANTS_SUCCESS:
+      // normalize payload: backend may return either an array or a paged object { content: [] }
+      const payload = action.payload;
+      const restaurantsArr = Array.isArray(payload)
+        ? payload
+        : (payload && Array.isArray(payload.content) ? payload.content : []);
       return {
         ...state,
         loading: false,
-        restaurants: action.payload,
+        restaurants: restaurantsArr,
       };
     case actionTypes.GET_RESTAURANT_BY_ID_SUCCESS:
       return {
@@ -79,20 +94,20 @@ const restaurantReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        events: [...state.events, action.payload],
-        restaurantEvents: [...state.restaurantEvents, action.payload],
+        events: [...state.events, normalizeEvent(action.payload)],
+        restaurantEvents: [...state.restaurantEvents, normalizeEvent(action.payload)],
       };
     case actionTypes.GET_ALL_EVENTS_SUCCESS:
       return {
         ...state,
         loading: false,
-        events: action.payload,
+        events: normalizeEventsArray(action.payload),
       };
     case actionTypes.GET_RESTAURANTS_EVENT_SUCCESS:
       return {
         ...state,
         loading: false,
-        restaurantEvents: action.payload,
+        restaurantEvents: normalizeEventsArray(action.payload),
       };
     case actionTypes.DELETE_EVENTS_SUCCESS:
       return {
