@@ -44,7 +44,7 @@ const Admin = () => {
             <Route path="/ingredients" element={<Ingredients />} />
             <Route path="/event" element={<Events />} />
             <Route path="/details" element={<RestaurantDetails />} />
-            <Route path="/add-menu" element={<CreateMenuForm />} />
+            <Route path="/add-menu" element={<CreateMenuForm onClose={() => window.history.back()} />} />
           </Routes>
 
         </div>

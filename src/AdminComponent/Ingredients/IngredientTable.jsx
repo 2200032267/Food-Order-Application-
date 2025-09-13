@@ -127,7 +127,7 @@ export default function IngredientTable() {
         aria-describedby="create-ingredient-modal-description"
       >
         <Box sx={style}>
-          <CreateIngredientForm />
+          <CreateIngredientForm onClose={handleClose} />
         </Box>
       </Modal>
     </Box>

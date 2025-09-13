@@ -1,23 +1,35 @@
 import { Button, TextField } from "@mui/material";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createIngredientCategory } from "../../component/State/Ingredients/Action";
 
-const CreateIngredientCategoryForm = () => {
+const CreateIngredientCategoryForm = ({ onClose }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
   const [formData, setFormData] = useState({ name: ""});
-  const {restaurant} = useSelector((store) => store);
-  const handleSubmit = (e) => {
+  const {restaurant, ingredients } = useSelector((store) => store);
+  const handleSubmit = async (e) => {
     e.preventDefault();
   const restaurantId = restaurant?.usersRestaurants?.[0]?.id;
   if (!restaurantId) return; // guard if not yet loaded
   const data={name:formData.name,restaurantId}
-    dispatch(createIngredientCategory({data,jwt}))
-
+    try {
+      await dispatch(createIngredientCategory({data,jwt}));
+      // effect below will close upon state update
+    } catch (e) {
+      // leave form open for correction
+    }
     console.log(formData);
   };
+  useEffect(() => {
+    const last = ingredients.category[ingredients.category.length - 1];
+    if (last && last.name === formData.name) {
+      if (typeof onClose === 'function') onClose();
+      setFormData({ name: '' });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ingredients.category.length]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({

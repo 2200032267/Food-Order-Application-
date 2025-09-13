@@ -7,20 +7,20 @@ import {
   TextField,
 } from "@mui/material";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createIngredient } from "../../component/State/Ingredients/Action";
 
-const CreateIngredientForm = () => {
+const CreateIngredientForm = ({ onClose }) => {
   const dispatch = useDispatch(); 
   const jwt = localStorage.getItem("jwt");
-   const {restaurant,ingredients} = useSelector((store) => store);
+  const { restaurant, ingredients } = useSelector((store) => store);
 
   const [formData, setFormData] = useState({
     name: "",
     categoryId: "",
   });
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const restId = restaurant?.usersRestaurants?.[0]?.id;
     const catId = formData.categoryId ? Number(formData.categoryId) : null;
@@ -38,8 +38,23 @@ const CreateIngredientForm = () => {
       restaurantId: restId,
     };
     console.log("Create ingredient payload", data);
-    dispatch(createIngredient({ data, jwt }));
+    try {
+      await dispatch(createIngredient({ data, jwt }));
+      // Rely on effect to close once state updates (ensures success)
+    } catch (e) {
+      // keep form open so user can fix errors
+    }
   };
+  // Auto-close when a new ingredient appears (length increases)
+  useEffect(() => {
+    // basic heuristic: close if last added ingredient matches current form name
+    const last = ingredients.ingredients[ingredients.ingredients.length - 1];
+    if (last && last.name === formData.name) {
+      if (typeof onClose === 'function') onClose();
+      setFormData({ name: '', categoryId: '' });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ingredients.ingredients.length]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({

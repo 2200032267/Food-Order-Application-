@@ -78,7 +78,7 @@ export default function IngredientCategoryTable  ()  {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <CreateIngredientCategoryForm/>
+          <CreateIngredientCategoryForm onClose={handleClose} />
         </Box>
       </Modal>
         

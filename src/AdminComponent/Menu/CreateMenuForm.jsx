@@ -34,7 +34,7 @@ const initialValues = {
   images: [],
 };
 
-const CreateMenuForm = () => {
+const CreateMenuForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
@@ -87,10 +87,16 @@ const CreateMenuForm = () => {
   // Auto close & return to previous page when creation succeeds
   useEffect(() => {
     if (menu?.message === "Menu item created successfully") {
+      const justCreatedName = formik.values.name; // capture before reset
       formik.resetForm();
-      navigate(-1); // go back to the table view
+      if (typeof onClose === 'function') {
+        onClose();
+      } else {
+        navigate(-1);
+      }
+      if (process.env.NODE_ENV !== 'production') console.debug('Closed menu form after create:', justCreatedName);
     }
-  }, [menu?.message, navigate, formik]);
+  }, [menu?.message, formik, onClose, navigate]);
 
   return (
     <div className="py-10 px-5 lg:flex items-center justify-center min-h-screen">
