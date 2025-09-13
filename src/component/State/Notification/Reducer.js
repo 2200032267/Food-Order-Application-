@@ -10,12 +10,22 @@ import {
   ADD_NOTIFICATION,
 } from './ActionTypes';
 
+// Load persisted notifications, stripping any legacy persisted toast notifications.
+// This migration ensures previously stored toast entries (which should have been ephemeral)
+// are removed on first load after deploying this fix.
 const persisted = (() => {
+  let list = [];
   try {
     const raw = localStorage.getItem('localNotifications');
-    if (raw) return JSON.parse(raw);
+    if (raw) list = JSON.parse(raw) || [];
   } catch (e) { /* ignore */ }
-  return [];
+  if (!Array.isArray(list)) list = [];
+  const filtered = list.filter(n => n && n.type !== 'toast');
+  // If any toasts were removed, rewrite storage without them (one-time cleanup)
+  if (filtered.length !== list.length) {
+    try { localStorage.setItem('localNotifications', JSON.stringify(filtered)); } catch (e) { /* ignore */ }
+  }
+  return filtered;
 })();
 
 const initialState = {
@@ -36,8 +46,13 @@ export const notificationReducer = (state = initialState, action) => {
       incoming.forEach(n => map.set(n.id, n));
       state.notifications.forEach(n => { if (!map.has(n.id)) map.set(n.id, n); });
       return { ...state, loading: false, notifications: Array.from(map.values()), error: null };
-    case ADD_NOTIFICATION:
+    case ADD_NOTIFICATION: {
+      // Always keep toast notifications in memory only (never persisted) so on refresh they disappear.
+      if (action.payload && action.payload.type === 'toast') {
+        return { ...state, notifications: [action.payload, ...state.notifications] };
+      }
       return { ...state, notifications: [action.payload, ...state.notifications] };
+    }
     case GET_NOTIFICATIONS_FAILURE:
       return { ...state, loading: false, error: action.payload };
     case MARK_NOTIFICATION_READ_REQUEST:

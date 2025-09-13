@@ -27,111 +27,90 @@ const HYDRATION_FLAG_KEY = 'auth_hydrating';
 
 export const registerUser = (reqData) => async (dispatch) => {
   dispatch({ type: REGISTER_REQUEST });
+  const { userData, navigate, returnTo, source = 'user' } = reqData || {};
   try {
-    console.log("Sending registration data:", reqData.userData);
+    console.log("Sending registration data:", userData);
     const { data } = await axios.post(
       `${API_URL}/auth/signup`,
-      reqData.userData
+      userData
     );
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
-  dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
-  // Clear any stale restaurant state from previous sessions
-  dispatch({ type: CLEAR_RESTAURANT_STATE });
-    // Immediately perform a login to obtain a fresh token populated with authorities (signup token may lack roles)
+    dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
+    dispatch({ type: CLEAR_RESTAURANT_STATE });
+    // Registration success toast (only for direct user initiated action, not programmatic calls)
+    try {
+      if (source === 'user') {
+        dispatch(addLocalNotification({ type: 'toast', title: 'Registration Successful', body: 'Account created successfully', data: { level: 'success', context: 'register' } }));
+      }
+    } catch(e) { /* ignore */ }
+    // Auto-login fetch profile
     try {
       const loginRes = await axios.post(`${API_URL}/auth/signin`, {
-        email: reqData.userData.email,
-        password: reqData.userData.password,
+        email: userData.email,
+        password: userData.password,
       });
       if (loginRes.data?.jwt) {
         localStorage.setItem("jwt", loginRes.data.jwt);
-  dispatch({ type: LOGIN_SUCCESS, payload: loginRes.data.jwt });
-  dispatch({ type: CLEAR_RESTAURANT_STATE });
-        // fetch profile after login
-        try {
-          // use centralized getUser so favorites are merged/persisted consistently
-          await dispatch(getUser(loginRes.data.jwt));
-        } catch (profileErr) {
-          console.warn("Failed to fetch profile after auto-login", profileErr);
+        dispatch({ type: LOGIN_SUCCESS, payload: loginRes.data.jwt });
+        dispatch({ type: CLEAR_RESTAURANT_STATE });
+        try { await dispatch(getUser(loginRes.data.jwt)); } catch (profileErr) { console.warn("Failed to fetch profile after auto-login", profileErr); }
+        // owner fetch
+        if (loginRes.data.role === "ROLE_RESTAURANT_OWNER") {
+          try { await dispatch(getRestaurantByUserId(loginRes.data.jwt)); } catch(e) { /* ignore */ }
         }
-  if (loginRes.data.role === "ROLE_RESTAURANT_OWNER") {
-          // fetch existing restaurant (if any); new owner gets none and will see create form
-            try { await dispatch(getRestaurantByUserId(loginRes.data.jwt)); } catch(e) { /* ignore */ }
-          reqData.navigate("/admin/restaurants");
-    } 
-    reqData.navigate("/");
+        // Navigate post registration
+        if (navigate) {
+          if (loginRes.data.role === "ROLE_RESTAURANT_OWNER") navigate("/admin/restaurants"); else navigate(returnTo || "/");
+        }
       } else {
-        // fallback navigation if login token missing
-        if (data.role === "ROLE_RESTAURANT_OWNER") {
-          reqData.navigate("/admin/restaurants");
-        } else {
-          reqData.navigate("/");
+        if (navigate) {
+          if (data.role === "ROLE_RESTAURANT_OWNER") navigate("/admin/restaurants"); else navigate(returnTo || "/");
         }
       }
     } catch (autoLoginErr) {
       console.warn("Auto-login after signup failed", autoLoginErr);
-      // attempt profile fetch with signup token as last resort
-      try {
-        await dispatch(getUser(data.jwt));
-      } catch (profileErr) {
-        console.warn("Profile fetch with signup token failed", profileErr);
-      }
-      const returnTo2 = reqData.returnTo;
-      if (data.role === "ROLE_RESTAURANT_OWNER") {
-        try { await dispatch(getRestaurantByUserId(data.jwt)); } catch(e) { /* ignore */ }
-        reqData.navigate("/admin/restaurants");
-      } else {
-        if (returnTo2) reqData.navigate(returnTo2); else reqData.navigate("/");
+      try { await dispatch(getUser(data.jwt)); } catch (profileErr) { console.warn("Profile fetch with signup token failed", profileErr); }
+      if (navigate) {
+        if (data.role === "ROLE_RESTAURANT_OWNER") navigate("/admin/restaurants"); else navigate(returnTo || "/");
       }
     }
-    console.log("register sucess", data);
   } catch (error) {
     dispatch({ type: REGISTER_FAILURE, payload: error });
     console.log("Error in registerUser action:", error);
-    console.log("Error response:", error.response?.data);
   }
 };
 
 export const loginUser = (reqData) => async (dispatch) => {
   dispatch({ type: LOGIN_REQUEST });
+  const { userData, navigate, source = 'user' } = reqData || {};
   try {
     const { data } = await axios.post(
       `${API_URL}/auth/signin`,
-      reqData.userData
+      userData
     );
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
     dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
     dispatch({ type: CLEAR_RESTAURANT_STATE });
-    // Fetch full user profile immediately
     try {
       await dispatch(getUser(data.jwt));
-      // clear hydration flag proactively so explicit login always shows toast, even if hydration still in progress
       try { sessionStorage.removeItem(HYDRATION_FLAG_KEY); } catch(e) { /* ignore */ }
-      try {
-        const hydrating = sessionStorage.getItem(HYDRATION_FLAG_KEY) === '1';
-        if (!hydrating) {
-          let profile = null;
-          try { const raw = localStorage.getItem('user_profile'); if (raw) profile = JSON.parse(raw); } catch(e) { /* ignore */ }
-          const displayName = profile?.fullName || profile?.name || profile?.username || profile?.email || 'User';
-          dispatch(addLocalNotification({ type: 'toast', title: `Welcome back, ${displayName}!`, body: 'Login successful', data: { level: 'success', context: 'login' } }));
-        }
-      } catch(e) { /* ignore toast errors */ }
+      // only show login toast if action source is user (explicit button) not hydration
+      if (source === 'user') {
+        let profile = null;
+        try { const raw = localStorage.getItem('user_profile'); if (raw) profile = JSON.parse(raw); } catch(e) { /* ignore */ }
+        const displayName = profile?.fullName || profile?.name || profile?.username || profile?.email || 'User';
+        dispatch(addLocalNotification({ type: 'toast', title: `Welcome back, ${displayName}!`, body: 'Login successful', data: { level: 'success', context: 'login' } }));
+      }
     } catch (e) { /* ignore */ }
-    // Single navigation decision
     const isOwner = data.role === 'ROLE_RESTAURANT_OWNER';
-    if (isOwner) {
-      try { await dispatch(getRestaurantByUserId(data.jwt)); } catch(e) { /* ignore */ }
-      reqData.navigate('/admin/restaurants');
-    } else {
-      reqData.navigate('/');
-    }
-    console.log("login sucess", data);
+    if (isOwner) { try { await dispatch(getRestaurantByUserId(data.jwt)); } catch(e) { /* ignore */ } }
+    if (navigate) navigate(isOwner ? '/admin/restaurants' : '/');
   } catch (error) {
     dispatch({ type: LOGIN_FAILURE, payload: error });
+    // existing error toast logic stays
     const status = error?.response?.status;
     const message = (error?.response?.data && (error.response.data.message || error.response.data.error)) || error.message || '';
     const lowerMsg = (message || '').toLowerCase();
-    // heuristics
     const userNotFound = status === 404 || /user not found|no such user|not registered|email does not exist/i.test(lowerMsg);
     const wrongPassword = /invalid password|bad credentials|password mismatch|wrong password/i.test(lowerMsg) && !userNotFound;
     const wrongEmailFormat = /invalid email|email format/i.test(lowerMsg);
@@ -149,7 +128,6 @@ export const loginUser = (reqData) => async (dispatch) => {
         dispatch(addLocalNotification({ type: 'toast', title: 'Login Error', body: 'Unable to login.', data: { level: 'error', context: 'login' } }));
       }
     } catch (e) { /* ignore */ }
-    console.log("Error in loginUser action:", error);
   }
 };
 
@@ -273,37 +251,25 @@ export const addToFavorite = ({ jwt, restaurantId }) => async (dispatch, getStat
   }
 };
  
-export const logout = () => async (dispatch) => {
- 
+export const logout = ({ source = 'user' } = {}) => async (dispatch) => {
   try {
-  // remove auth/profile related keys AND legacy global favorites to avoid leakage to next user
-  const keys = ['user_profile','user_role','local_cart_v1','localNotifications','cachedOrders_v1','knownOrderStatuses_v1','seenEvents_v1','favorites'];
-  keys.forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
-  // remove JWT from both storages
-  try { localStorage.removeItem('jwt'); } catch(e) {}
-  try { sessionStorage.removeItem('jwt'); } catch(e) {}
-  // clear temporary payment flag if any
-  try { localStorage.removeItem('payment_in_progress'); } catch(e) {}
-  // clear axios default Authorization header if set
-  try { if (api && api.defaults && api.defaults.headers) delete api.defaults.headers.common['Authorization']; } catch(e) {}
-
-  // capture profile before clearing so we can personalize message
-  let profileName = null;
-  try { const raw = localStorage.getItem('user_profile'); if (raw) { const p = JSON.parse(raw); profileName = p.fullName || p.name || p.username || p.email || null; } } catch(e) { /* ignore */ }
-  dispatch({ type: LOGOUT });
-  try {
+    let profileName = null;
+    try { const raw = localStorage.getItem('user_profile'); if (raw) { const p = JSON.parse(raw); profileName = p.fullName || p.name || p.username || p.email || null; } } catch(e) { /* ignore */ }
     const hydrating = sessionStorage.getItem(HYDRATION_FLAG_KEY) === '1';
-    if (!hydrating) {
-      if (profileName) {
-        dispatch(addLocalNotification({ type: 'toast', title: `Logout Successful`, body: `${profileName} has been logged out.`, data: { level: 'error', context: 'logout' } }));
-      } else {
-        dispatch(addLocalNotification({ type: 'toast', title: 'Logout Successful', body: 'Logged out.', data: { level: 'error', context: 'logout' } }));
-      }
+    // clear state/storage
+    const keys = ['user_profile','user_role','local_cart_v1','localNotifications','cachedOrders_v1','knownOrderStatuses_v1','seenEvents_v1','favorites'];
+    keys.forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+    try { localStorage.removeItem('jwt'); } catch(e) {}
+    try { sessionStorage.removeItem('jwt'); } catch(e) {}
+    try { localStorage.removeItem('payment_in_progress'); } catch(e) {}
+    try { if (api && api.defaults && api.defaults.headers) delete api.defaults.headers.common['Authorization']; } catch(e) {}
+    dispatch({ type: LOGOUT });
+    // Show toast only if explicitly triggered by user (not hydration, not silent) and not payment redirect cleanup
+    if (!hydrating && source === 'user') {
+      const body = profileName ? `${profileName} has been logged out.` : 'Logged out.';
+      dispatch(addLocalNotification({ type: 'toast', title: 'Logout Successful', body, data: { level: 'info', context: 'logout' } }));
     }
-  } catch(e) { /* ignore */ }
-  console.log("logout successful");
   } catch (error) {
-    
     console.log("Error in logout action:", error);
   }
 };

@@ -112,13 +112,18 @@ export const addLocalNotification = (payload) => (dispatch) => {
   // debug/log so developer can verify this ran
   // keep adding local notifications silent in console; developers can enable NODE_ENV=development to see warnings
   dispatch({ type: 'ADD_NOTIFICATION', payload: n });
-  // persist local notifications so they survive reloads for this client
-  try {
-    const existing = JSON.parse(localStorage.getItem('localNotifications') || '[]');
-    existing.unshift(n);
-    // keep last 200 notifications
-    localStorage.setItem('localNotifications', JSON.stringify(existing.slice(0, 200)));
-  } catch (e) {
-    console.warn('failed to persist local notification', e);
+  // IMPORTANT: Toast notifications are ephemeral and MUST NOT be persisted, otherwise
+  // they will replay on refresh causing duplicate auth/payment messages. Only persist
+  // non-toast notifications (e.g., order status, events) so users retain meaningful state.
+  if (n.type !== 'toast') {
+    try {
+      const existing = JSON.parse(localStorage.getItem('localNotifications') || '[]');
+      existing.unshift(n);
+      // keep last 200 notifications
+      const sanitized = existing.filter(x => x && x.type !== 'toast'); // defensive: strip any legacy toasts
+      localStorage.setItem('localNotifications', JSON.stringify(sanitized.slice(0, 200)));
+    } catch (e) {
+      if (process.env.NODE_ENV !== 'production') console.warn('failed to persist local notification', e);
+    }
   }
 };
