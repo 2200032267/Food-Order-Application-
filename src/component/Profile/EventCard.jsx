@@ -10,7 +10,7 @@ import React from "react";
 import dayjs from 'dayjs';
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export const EventCard = ({ event = {}, canDelete = false, onDelete }) => {
+export const EventCard = ({ event = {}, canDelete = false, onDelete, onNavigate }) => {
   const image = event.image || "https://cdn.pixabay.com/photo/2020/12/17/00/50/food-5838035_1280.jpg";
   const title = event.name || event.title || "Unnamed Event";
   const description = event.description || event.subtitle || "";
@@ -20,9 +20,13 @@ export const EventCard = ({ event = {}, canDelete = false, onDelete }) => {
   const start = startRaw ? dayjs(startRaw).format('MMM D, YYYY h:mm A') : null;
   const end = endRaw ? dayjs(endRaw).format('MMM D, YYYY h:mm A') : null;
 
+  const handleClick = () => {
+    if (onNavigate) onNavigate(event);
+  };
+
   return (
     <div>
-      <Card sx={{ width: 345 }}>
+      <Card sx={{ width: 345, cursor: onNavigate ? 'pointer' : 'default' }} onClick={handleClick}>
         <CardMedia sx={{ height: 345 }} image={image} />
         <CardContent>
           <Typography variant="h5">{title}</Typography>
