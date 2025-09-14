@@ -6,12 +6,14 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { useDispatch, useSelector } from "react-redux";
 import { updateRestaurantStatus } from "../../component/State/Restaurant/Action";
+import { normalizeAddress } from "../../component/utils/addressNormalizer";
 
 export const RestaurantDetails = () => {
   const { restaurant } = useSelector((store) => store);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const current = restaurant?.usersRestaurants?.[0];
+  const addr = normalizeAddress(current?.address);
   const [toggling, setToggling] = useState(false);
 
   const handleRestaurantStatus = async () => {
@@ -112,29 +114,29 @@ export const RestaurantDetails = () => {
                   <p className="w-48">Country</p>
                   <p className="text-gray-400">
                     <span className="pr-5">-</span>
-                    {current?.address?.country || "N/A"}
+                    {addr?.country || "N/A"}
                   </p>
                 </div>
                 <div className="flex">
                   <p className="w-48">City</p>
                   <p className="text-gray-400">
                     <span className="pr-5">-</span>
-                    {current?.address?.city || "N/A"}
+                    {addr?.city || "N/A"}
                   </p>
                 </div>
                 <div className="flex">
                   <p className="w-48">Postal Code</p>
                   <p className="text-gray-400">
                     <span className="pr-5">-</span>
-                    {current?.address?.postalCode || "N/A"}
+                    {addr?.postalCode || "N/A"}
                   </p>
                 </div>
                 <div className="flex">
                   <p className="w-48">Street Address</p>
                   <p className="text-gray-400">
                     <span className="pr-5">-</span>
-                    {/* Prefer explicit streetAddress, fallback to street, then show N/A */}
-                    {current?.address?.streetAddress || current?.address?.street || "N/A"}
+                    {/* Prefer canonical street, fallback to streetAddress */}
+                    {addr?.street || addr?.streetAddress || "N/A"}
                   </p>
                 </div>
                

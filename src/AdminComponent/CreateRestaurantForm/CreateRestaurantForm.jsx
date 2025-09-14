@@ -48,8 +48,12 @@ function CreateRestaurantForm() {
         description: values.description,
         cuisineType: values.cuisineType,
         address: {
+          // Send both legacy (streetAddress/stateProvince) and canonical (street/state) keys
+          // so backend expecting either style will persist correctly. Remove legacy after migration.
+          street: values.streetAddress,
           streetAddress: values.streetAddress,
           city: values.city,
+          state: values.stateProvince,
           stateProvince: values.stateProvince,
           postalCode: values.postalCode,
           country: values.country,

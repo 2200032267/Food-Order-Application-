@@ -19,6 +19,7 @@ import {
 } from "../State/Restaurant/Action";
 import { getErrorMessage, isConstraintViolation } from "../config/errorHandler";
 import { getMenuItemsByRestaurantId } from "../State/Menu/Action";
+import { normalizeAddress } from "../utils/addressNormalizer";
 
 const foodTypes = [
   { label: "All", value: "all" },
@@ -207,11 +208,12 @@ const RestaurantDetails = () => {
     );
   }
 
+  const normalizedAddress = normalizeAddress(restaurantData.address);
   return (
     <div className="px-5 lg:px-20">
       <section>
         <h3 className="text-gray-500 py-2 mt-10">
-          Home / {restaurantData.address?.country || "India"} /{" "}
+          Home / {normalizedAddress.country || "India"} /{" "}
           {restaurantData.cuisineType || "Food"} / {restaurantData.id || id}
         </h3>
         <div>
@@ -268,8 +270,8 @@ const RestaurantDetails = () => {
             <p className="text-gray-500 flex items-center gap-3">
               <LocationOnIcon />
               <span>
-                {restaurantData.address
-                  ? `${(restaurantData.address.streetAddress || restaurantData.address.street || "").trim()}${restaurantData.address.city ? ", " + restaurantData.address.city : ""}${restaurantData.address.stateProvince ? ", " + restaurantData.address.stateProvince : ""}${restaurantData.address.postalCode ? ", " + restaurantData.address.postalCode : ""}`
+                {normalizedAddress && (normalizedAddress.street || normalizedAddress.streetAddress || normalizedAddress.city || normalizedAddress.state || normalizedAddress.stateProvince || normalizedAddress.postalCode)
+                  ? [normalizedAddress.street || normalizedAddress.streetAddress, normalizedAddress.city, normalizedAddress.state || normalizedAddress.stateProvince, normalizedAddress.postalCode].filter(Boolean).join(', ')
                   : "123 Main Street, City, State, 12345"}
               </span>
             </p>
