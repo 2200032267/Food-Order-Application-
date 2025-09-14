@@ -14,6 +14,7 @@ const menuItemReducer = (state = initialState, action) => {
     case actionTpes.DELETE_MENU_ITEM_REQUEST:
     case actionTpes.SEARCH_MENU_ITEM_REQUEST:
     case actionTpes.UPDATE_MENU_ITEM_AVAILBILITY_REQUEST:
+    case actionTpes.UPDATE_MENU_ITEM_CATEGORY_REQUEST:
       return {
         ...state,
         loading: true,
@@ -52,6 +53,15 @@ const menuItemReducer = (state = initialState, action) => {
           menuItem.id === action.payload.id ? action.payload : menuItem
         ),
       };
+    case actionTpes.UPDATE_MENU_ITEM_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        menuItems: state.menuItems.map((menuItem) =>
+          menuItem.id === action.payload.id ? action.payload : menuItem
+        ),
+        message: "Menu item category updated successfully",
+      };
     case actionTpes.SEARCH_MENU_ITEM_SUCCESS:
       return {
         ...state,
@@ -64,6 +74,7 @@ const menuItemReducer = (state = initialState, action) => {
     case actionTpes.DELETE_MENU_ITEM_FAILURE:
     case actionTpes.SEARCH_MENU_ITEM_FAILURE:
     case actionTpes.UPDATE_MENU_ITEM_AVAILBILITY_FAILURE:
+    case actionTpes.UPDATE_MENU_ITEM_CATEGORY_FAILURE:
       return {
         ...state,
         loading: false,

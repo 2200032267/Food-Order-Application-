@@ -18,7 +18,9 @@ import CreateIcon from "@mui/icons-material/Create";
 import { Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteFoodAction, getMenuItemsByRestaurantId } from "../../component/State/Menu/Action";
+import { deleteFoodAction, getMenuItemsByRestaurantId, updateFoodCategory } from "../../component/State/Menu/Action";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { getRestaurantsCategory } from "../../component/State/Restaurant/Action";
 import { getIngredientsOfRestaurant } from "../../component/State/Ingredients/Action";
 
 export default function MenuTable() {
@@ -40,6 +42,7 @@ export default function MenuTable() {
           food_category: "",
         })
       );
+      dispatch(getRestaurantsCategory({ jwt, restaurantId }));
     }
   }, [dispatch, jwt, restaurantId]);
 
@@ -77,6 +80,7 @@ export default function MenuTable() {
               <TableRow>
                 <TableCell align="left">image</TableCell>
                 <TableCell align="right">Title</TableCell>
+                <TableCell align="right">Category</TableCell>
                 <TableCell align="right">Ingredients</TableCell>
                 <TableCell align="right">price</TableCell>
                 <TableCell align="right">Availabilty</TableCell>
@@ -116,6 +120,26 @@ export default function MenuTable() {
                       <Avatar src={item.images?.[0]}></Avatar>
                     </TableCell>
                     <TableCell align="right">{item.name}</TableCell>
+                    <TableCell align="right">
+                      <FormControl size="small" sx={{ minWidth: 160 }}>
+                        <InputLabel id={`cat-${item.id}`}>Category</InputLabel>
+                        <Select
+                          labelId={`cat-${item.id}`}
+                          label="Category"
+                          value={String(item.foodCategory?.id || item.category?.id || "")}
+                          onChange={(e) => {
+                            const newId = e.target.value;
+                            if (newId === undefined || newId === null || newId === "") return;
+                            dispatch(updateFoodCategory({ foodId: item.id, categoryId: Number(newId), jwt }));
+                          }}
+                        >
+                          <MenuItem value=""><em>Unassigned</em></MenuItem>
+                          {(restaurant.categories || []).map((c) => (
+                            <MenuItem key={c.id} value={String(c.id)}>{c.name}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </TableCell>
                     <TableCell align="right">
                       {displayIngredients.length === 0 ? (
                         <Chip label="No ingredients" size="small" color="default" />

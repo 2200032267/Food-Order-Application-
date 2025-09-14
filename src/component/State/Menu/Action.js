@@ -16,6 +16,9 @@ import {
   UPDATE_MENU_ITEM_AVAILBILITY_FAILURE,
   UPDATE_MENU_ITEM_AVAILBILITY_REQUEST,
   UPDATE_MENU_ITEM_AVAILBILITY_SUCCESS,
+  UPDATE_MENU_ITEM_CATEGORY_REQUEST,
+  UPDATE_MENU_ITEM_CATEGORY_SUCCESS,
+  UPDATE_MENU_ITEM_CATEGORY_FAILURE,
 } from "./ActionTypes";
 
 export const createMenuItem = ({ menu, jwt }) => {
@@ -25,7 +28,7 @@ export const createMenuItem = ({ menu, jwt }) => {
       const payload = { ...menu };
 
       // Normalize category -> backend might expect nested object under foodCategory
-      const catIdCandidate = payload.foodCategoryId || payload.categoryId || payload.category;
+      const catIdCandidate = payload.foodCategoryId || payload.categoryId || payload.category || (payload.foodCategory && payload.foodCategory.id);
       if (!payload.foodCategory && catIdCandidate) {
         if (typeof catIdCandidate === "object" && catIdCandidate.id) {
           payload.foodCategory = { id: catIdCandidate.id };
@@ -35,6 +38,22 @@ export const createMenuItem = ({ menu, jwt }) => {
       }
       if (payload.foodCategory && (typeof payload.foodCategory === "string" || typeof payload.foodCategory === "number")) {
         payload.foodCategory = { id: payload.foodCategory };
+      }
+      // If after normalization we still don't have a nested object but we do have a category id, build it.
+      if (!payload.foodCategory) {
+        if (catIdCandidate !== undefined && catIdCandidate !== null && catIdCandidate !== "") {
+          payload.foodCategory = { id: catIdCandidate };
+        } else {
+          console.warn("[createMenuItem] No category id provided; menu item will have null foodCategory");
+        }
+      }
+      // BACKEND COMPAT: also send 'category' alias if backend expects CreateFoodRequest.category
+      if (!payload.category && payload.foodCategory) {
+        payload.category = { ...payload.foodCategory };
+      }
+      // Some backends used a typo 'seasional' - duplicate flag for safety
+      if (payload.seasonal !== undefined && payload.seasional === undefined) {
+        payload.seasional = payload.seasonal; // ensure both present
       }
 
       // Ensure restaurantId present
@@ -85,11 +104,37 @@ export const createMenuItem = ({ menu, jwt }) => {
     }
   };
 };
+
+// Update a food item's category via admin repair endpoint
+export const updateFoodCategory = ({ foodId, categoryId, jwt }) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_MENU_ITEM_CATEGORY_REQUEST, payload: { foodId, categoryId } });
+    try {
+      const { data } = await api.patch(
+        `/api/admin/food/${foodId}/category?categoryId=${encodeURIComponent(categoryId)}`,
+        {},
+        { headers: { Authorization: `Bearer ${jwt}` } }
+      );
+      console.log("Food category updated successfully:", data);
+      dispatch({ type: UPDATE_MENU_ITEM_CATEGORY_SUCCESS, payload: data });
+    } catch (error) {
+      console.log("Error updating food category:", error?.response?.data || error.message);
+      dispatch({ type: UPDATE_MENU_ITEM_CATEGORY_FAILURE, payload: { foodId, error } });
+    }
+  };
+};
 export const getMenuItemsByRestaurantId = (reqData) => {
   return async (dispatch) => {
     dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST });
     try {
-        const url = `/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${encodeURIComponent(reqData.food_category || "")}`;
+        const catName = encodeURIComponent(reqData.food_category || "");
+        const catId = reqData.categoryId !== undefined && reqData.categoryId !== null && reqData.categoryId !== ""
+          ? encodeURIComponent(reqData.categoryId)
+          : "";
+        // Prefer categoryId; keep name params for backwards compatibility
+        const url = `/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}`
+          + `${catId ? `&categoryId=${catId}` : ""}`
+          + `${catName ? `&food_category=${catName}&food_Category=${catName}` : ""}`;
         console.log("Fetching menu items with URL:", url);
         console.log("Request headers: Authorization: Bearer", reqData.jwt);
         const { data } = await api.get(url, {

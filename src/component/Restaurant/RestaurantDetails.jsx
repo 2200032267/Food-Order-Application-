@@ -47,15 +47,21 @@ const RestaurantDetails = () => {
   // Client-side fallback filter: apply both foodType and category filters
   const matchesCategory = (mi) => {
     if (!selectedCategory) return true;
+    // Try object forms first
     const cat = mi.category ?? mi.foodCategory ?? mi.food_category;
-    if (!cat) return false;
-    if (typeof cat === "string") return String(cat) === String(selectedCategory);
-    const catId = cat.id ?? cat._id ?? cat.categoryId;
-    const catName = cat.name ?? cat.title;
-    return (
-      (catId !== undefined && String(catId) === String(selectedCategory)) ||
-      (catName !== undefined && String(catName) === String(selectedCategory))
-    );
+    if (cat) {
+      if (typeof cat === "string") return String(cat) === String(selectedCategory);
+      const catId = cat.id ?? cat._id ?? cat.categoryId;
+      const catName = cat.name ?? cat.title;
+      if ((catId !== undefined && String(catId) === String(selectedCategory)) ||
+          (catName !== undefined && String(catName) === String(selectedCategory))) return true;
+    }
+    // Fallback: some payloads may only include an id field without nested object
+    const directId = mi.foodCategoryId ?? mi.categoryId ?? mi.food_category_id ?? mi.food_categoryId;
+    if (directId !== undefined && directId !== null) {
+      return String(directId) === String(selectedCategory);
+    }
+    return false;
   };
 
   const matchesFoodType = (mi) => {
@@ -72,13 +78,22 @@ const RestaurantDetails = () => {
   const filteredMenuItems = menuItems.filter((mi) => matchesCategory(mi) && matchesFoodType(mi));
 
   useEffect(() => {
-    // console.log("Available categories:", restaurant.categories);
-    // console.log("Selected category:", selectedCategory);
-    console.log(
-      "menuItems summary:",
-      menuItems.map((m) => ({ id: m.id, name: m.name, category: m.category }))
-    );
-    
+    if (process.env.NODE_ENV !== 'production') {
+      console.log("[CategoryDebug] Selected category=", selectedCategory);
+      console.log("[CategoryDebug] First 5 menu items category snapshot:", menuItems.slice(0,5).map(m => ({
+        id: m.id,
+        name: m.name,
+        category: m.category,
+        foodCategory: m.foodCategory,
+        foodCategoryId: m.foodCategoryId,
+        categoryId: m.categoryId
+      })));
+      console.log("[CategoryDebug] Filtered count=", filteredMenuItems.length, " / total=", menuItems.length);
+      const nullWithCategories = menuItems.filter(m => !m.foodCategory && (m.foodCategoryId || m.categoryId));
+      if (nullWithCategories.length > 0) {
+        console.log('[CategoryDebug] Items missing nested foodCategory but have id field:', nullWithCategories.map(i => ({id:i.id, foodCategoryId:i.foodCategoryId, categoryId:i.categoryId})));
+      }
+    }
   }, [restaurant.categories, selectedCategory, menuItems, filteredMenuItems]);
 
   // No frontend filter needed; backend returns filtered items
@@ -124,17 +139,26 @@ const RestaurantDetails = () => {
   }, [categories, menuItems]);
 
   useEffect(() => {
+    // Resolve to id for backend (categoryId wins)
+    let categoryId = "";
+    if (selectedCategory && categoriesList && categoriesList.length > 0) {
+      const match = categoriesList.find(c => String(c.id) === String(selectedCategory) || String(c.name) === String(selectedCategory));
+      if (match && match.id !== undefined && match.id !== null) {
+        categoryId = match.id;
+      }
+    }
     const payload = {
       jwt,
       restaurantId: id,
       vegetarian: foodType === "vegetarian",
       nonveg: foodType === "nonveg",
       seasonal: foodType === "seasonal",
-      food_category: selectedCategory,
+      categoryId: categoryId || "",
+      food_category: selectedCategory || "", // keep name for compatibility
     };
     console.log("Dispatching getMenuItemsByRestaurantId with:", payload);
     dispatch(getMenuItemsByRestaurantId(payload));
-  }, [dispatch, id, jwt, selectedCategory, foodType]);
+  }, [dispatch, id, jwt, selectedCategory, foodType, categoriesList]);
 
   // Loading state
   if (restaurant && restaurant.loading) {

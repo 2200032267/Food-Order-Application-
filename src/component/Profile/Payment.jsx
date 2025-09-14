@@ -43,7 +43,7 @@ const PaymentDetails = () => {
   const displayOrders = hasOrders ? orders : [];
 
   // Helper to get payment status
-  const paidStatuses = new Set(['PAID', 'COMPLETED', 'OUT_FOR_DELIVERY', 'DELIVERED', 'SUCCESS']);
+  const paidStatuses = new Set(['PAID', 'COMPLETED', 'OUT FOR DELIVERY', 'DELIVERED', 'SUCCESS']);
   const getPaymentStatus = (order) => {
     if (!order) return 'Not paid yet';
     if (order?.isPaid) return 'Paid';

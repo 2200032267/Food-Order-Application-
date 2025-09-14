@@ -13,7 +13,7 @@ import OrderTable from "./OrderTable";
 const orderStatus = [
   { label: "Pending", value: "PENDING" },
   { label: "Completed", value: "COMPLETED" },
-  { label: "Out for Delivery", value: "OUT_FOR_DELIVERY" },
+  { label: "Out for Delivery", value: "OUT FOR DELIVERY" },
   { label: "All", value: "ALL" },
 ];
 export const Orders = () => {

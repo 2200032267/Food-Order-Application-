@@ -20,6 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
 import { useDispatch, useSelector } from "react-redux";
 import { createMenuItem } from "../../component/State/Menu/Action";
+import { getRestaurantsCategory } from "../../component/State/Restaurant/Action";
 import { getIngredientsOfRestaurant } from "../../component/State/Ingredients/Action";
 
 const initialValues = {
@@ -45,6 +46,13 @@ const CreateMenuForm = ({ onClose }) => {
     onSubmit: (values) => {
       const restId = restaurant?.usersRestaurants?.[0]?.id;
       if (!restId) return;
+      // Require a category selection to ensure relation is persisted
+      if (!values.categoryId) {
+        console.warn("No category selected for menu item; select a category to enable filtering.");
+        // Optionally you can show a toast here if you have a toast utility
+        // dispatch(addLocalNotification({ type: 'toast', title: 'Select a category', body: 'Please choose a category for the menu item', data: { level: 'warn' } }))
+        return;
+      }
       const payload = {
         name: values.name,
         description: values.description,
@@ -52,7 +60,11 @@ const CreateMenuForm = ({ onClose }) => {
         vegetarian: values.vegetarian,
         seasonal: values.seasonal,
         restaurantId: restId,
-    foodCategoryId: values.categoryId, // will be normalized in action
+  categoryId: values.categoryId ? Number(values.categoryId) : undefined, // preferred by backend
+  foodCategoryId: values.categoryId ? Number(values.categoryId) : undefined, // still provided for action normalizer
+    // Send nested category objects for backend that expects 'category' field
+  category: values.categoryId ? { id: Number(values.categoryId) } : undefined,
+  foodCategory: values.categoryId ? { id: Number(values.categoryId) } : undefined,
     ingredientIds: values.ingredientIds,
     // also send ingredients as objects so backend can bind relation
     ingredients: values.ingredientIds.map((id) => ({ id })),
@@ -81,6 +93,8 @@ const CreateMenuForm = ({ onClose }) => {
   useEffect(() => {
     if (restaurantId && jwt) {
       dispatch(getIngredientsOfRestaurant({ jwt, id: restaurantId }));
+      // also fetch categories so the selector has options
+      dispatch(getRestaurantsCategory({ jwt, restaurantId }));
     }
   }, [restaurantId, jwt, dispatch]);
 
