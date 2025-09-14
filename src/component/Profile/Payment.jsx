@@ -66,9 +66,32 @@ const PaymentDetails = () => {
   // delivery calculation follows Cart.jsx: base === 0 ? 0 : min(99, max(15, round(base * 0.07)))
   const computeDeliveryFee = (base) => (base === 0 ? 0 : Math.min(99, Math.max(15, Math.round(base * 0.07))));
   const delivery = computeDeliveryFee(subtotal);
+  // Recompute discount so that (subtotal + delivery - discount) matches summed order totals (if orders exist)
+  let discount = 0;
+  if (displayOrders.length > 0) {
+    const orderGrandTotal = displayOrders.reduce(
+      (sum, o) =>
+        sum +
+        (Number(o.total) ||
+          Number(o.totalPrice) ||
+          Number(o.amount) ||
+          Number(o.grandTotal) ||
+          0),
+      0
+    );
 
+    const currentCalculatedTotal = subtotal + delivery;
+
+    // If our computed total is higher than the orders' grand total, treat the difference as discount.
+    // Never use a negative discount (would look like an extra charge).
+    const diff = currentCalculatedTotal - orderGrandTotal;
+    discount = diff > 0 ? diff : 0;
+  } else {
+    // Fallback when no orders: keep prior 5% discount behavior
+    discount = Number((subtotal * 0.05) || 0);
+  }
   // apply 5% discount on total food items (subtotal)
-  const discount = Number((subtotal * 0.05) || 0);
+  
 
   // total is subtotal + delivery - discount
   const total = Number(subtotal + delivery - discount);
