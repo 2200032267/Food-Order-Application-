@@ -15,19 +15,76 @@ const OrderCard = ({ item, order }) => {
   const displayName = item?.name || item?.title || item?.food?.name || 'Unknown Item';
   const displayPrice = Number(item?.unitPrice ?? item?.price ?? item?.totalPrice ?? item?.food?.price ?? 0) || 0;
   const displayQuantity = Number(item?.quantity ?? item?.qty ?? item?.count ?? 1) || 1;
-  const lineTotal = Number((item?.totalPrice ?? (displayPrice * displayQuantity)) || 0);
+  
+
+  const categoryName =
+    item?.foodCategory?.name
+    || item?.food?.foodCategory?.name
+    || item?.foodCategory
+    || item?.food?.foodCategory
+    || item?.category?.name
+    || item?.food?.category?.name
+    || item?.category
+    || item?.food?.category
+    || 'No Category';
+    React.useEffect(() => {
+      // Move restaurant name div below category name div (DOM patch since JSX can't be changed here)
+      const roots = document.querySelectorAll('div.flex.justify-between.items-center.p-4');
+      roots.forEach(root => {
+        const infoBlocks = root.querySelectorAll('div.flex.items-center.space-x-2.text-xs.text-white.uppercase.tracking-wide');
+        if (infoBlocks.length >= 2) {
+          const categoryBlock = infoBlocks[0];
+          const restaurantBlock = infoBlocks[1];
+          if (!categoryBlock.contains(restaurantBlock)) {
+            // Clean up spacing classes for vertical stacking
+            categoryBlock.classList.add('flex', 'flex-col', 'items-end', 'space-y-1');
+            restaurantBlock.classList.remove('space-x-2');
+            restaurantBlock.classList.add('mt-1');
+            // Remove any stray <br> between them
+            const siblings = Array.from(root.childNodes);
+            siblings.forEach(n => {
+              if (n.nodeName === 'BR') n.parentNode.removeChild(n);
+            });
+            categoryBlock.appendChild(restaurantBlock);
+          }
+        }
+      });
+    }, []);
+  const restaurantName =
+    item?.restaurant?.name
+    || item?.restaurantName
+    || item?.food?.restaurant?.name
+    || order?.restaurant?.name
+    || order?.restaurantName
+    || order?.vendor?.name
+    || item?.vendor?.name
+    || order?.outlet?.name
+    || item?.outlet?.name
+    || null;
 
   return (
     <div className='flex justify-between items-center p-4'>
       <div className='flex items-center space-x-4'>
-        <img className="h-14 w-14 rounded object-cover bg-gray-100" src={resolveImage()} alt={displayName} />
+        <img
+          className="h-14 w-14 rounded object-cover bg-gray-100"
+          src={resolveImage()}
+          alt={displayName}
+        />
         <div className='text-sm'>
           <p className='font-medium'>{displayName}</p>
-          <p className='text-xs text-gray-500'>Qty: {displayQuantity} • Unit: ₹{displayPrice} • Line: ₹{lineTotal}</p>
+          <p className='text-xs text-gray-500'>
+            Qty: {displayQuantity} • Price: ₹{displayPrice}
+          </p>
         </div>
       </div>
-      <div className='flex items-center space-x-2'>
-        <span className="text-white text-xs uppercase tracking-wide">{order?.status || order?.orderStatus}</span>
+      <div className='flex items-center space-x-2 text-xs text-white uppercase tracking-wide'>
+        <span>{categoryName}</span>
+        
+      </div>
+      <br></br>
+      <div className='flex items-center space-x-2 text-xs text-white uppercase tracking-wide'>
+        <span>{restaurantName ? `  ${restaurantName}` : ''}</span>
+        
       </div>
     </div>
   )

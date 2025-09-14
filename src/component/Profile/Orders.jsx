@@ -32,6 +32,7 @@ const Orders = () => {
   if (process.env.NODE_ENV !== 'production') {
     try { console.debug('Orders count:', orders.length); } catch (e) {}
   }
+  // Removed: displayName logic moved to renderOrderSummary
 
   const ordersList = Array.isArray(orders) ? orders : [];
   const anyOrderHasItems = ordersList.some(o => Array.isArray(o?.items) && o.items.length > 0);
@@ -41,10 +42,13 @@ const Orders = () => {
     const status = o.status || 'unknown';
     const id = o.id;
     const created = o.createdAt ? new Date(o.createdAt).toLocaleString() : '';
+    // Use first item's name/title/food.name or fallback
+    const firstItem = Array.isArray(o.items) && o.items.length > 0 ? o.items[0] : null;
+    const displayName = firstItem?.name || firstItem?.title || firstItem?.food?.name || 'Unknown Item';
     return (
       <div key={`summary-${id}`} className=" p-4 mb-2 bg-[#e91e63]">
         <div className="flex justify-between items-center">
-          <div className="text-sm font-medium text-white">Order #{id}</div>
+           <p className='font-medium'>{displayName}</p>
           <div className="text-xs uppercase tracking-wide text-white">{status}</div>
         </div>
         <div className="mt-1 text-xs text-white flex flex-wrap gap-4">
