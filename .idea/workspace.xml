@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1a9602db-8516-4392-bae4-e9a8db3a039f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../ECommerce App" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/components.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/eslint.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/jsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/postcss.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/public/banner-img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/public/vite.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/App.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/App.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/api/axiosInstance.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/assets/react.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/common-form/form-controls.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/common-form/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/instructor-view/courses/add-new-course/course-curriculum.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/instructor-view/courses/add-new-course/course-landing.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/instructor-view/courses/add-new-course/course-settings.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/instructor-view/courses/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/instructor-view/dashboard/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/media-progress-bar/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/route-guard/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/student-view/common-layout.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/student-view/header.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/button.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/card.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/checkbox.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/dialog.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/dropdown-menu.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/input.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/label.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/scroll-area.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/select.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/skeleton.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/slider.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/switch.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/table.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/tabs.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/textarea.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/toast.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/ui/toaster.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/components/video-player/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/config/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/context/auth-context/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/context/instructor-context/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/context/student-context/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/hooks/use-toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/lib/utils.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/main.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/auth/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/instructor/add-new-course.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/instructor/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/not-found/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/student/course-details/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/student/course-progress/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/student/courses/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/student/home/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/student/payment-return/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/pages/student/student-courses/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/src/services/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/tailwind.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/client/vite.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/controllers/auth-controller/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/controllers/instructor-controller/course-controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/controllers/student-controller/course-controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/controllers/student-controller/course-progress-controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/controllers/student-controller/order-controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/controllers/student-controller/student-courses-controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/helpers/cloudinary.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/helpers/paypal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/middleware/auth-middleware.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/models/Course.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/models/CourseProgress.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/models/Order.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/models/StudentCourses.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/models/User.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/routes/auth-routes/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/routes/instructor-routes/course-routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/routes/instructor-routes/media-routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/routes/student-routes/course-progress-routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/routes/student-routes/course-routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/routes/student-routes/order-routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/routes/student-routes/student-courses-routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/server.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/00560a08e78e462eb3e792e3c5c55604" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/0183d9d7ff49f06b1e90c3617c69e673" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/01bdf0b5683bde24f7bfdf1ddf6442c0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/04eb3d6027823ea70aa2d7c0aa54e16f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/0822dbc1227af9e0fbcf2df24f8281a2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/0bfd1ac0bdd9e59d1ab9db49b3883437" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/0d8c7de8d4af74b8f654d1c920f67b9d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/0e7b474afe3ca58ca5ae6e6df65b73e7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1329e4be87de6d3816e07006f94f7772" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/13a802aa829c7e2dc1c60e0fd5b50a8d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/13edb6abaedfdd82229e72c583f68e3e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1524e1fc1f2bc7ba6c6acabc6a00113b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/15cb1d4073568d91c3e861a745d71ba9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1873332adb8bf7f5e41205502edc671a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1b7bdb43b4a20f7add990941089f3902" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1bc40f5ce17cc714db640dbf5c19810e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1be2a73bc6eb0a08d8d66101c95aa00d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1ed91a9d7265d538fc7c555796d2bf70" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/1fa223c9d9ec0f611aa9a3e16bd1185b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/20092118ef028a95baa46f270b9c4231" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/23f8738d70876a9c25f04965a36bc53d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/24e97b6e44532e269f6d52f08481b2c1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/252adaf9d3c6d6cb25159a4cfc9bf29e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/265fcbf1caedbc24820c83fceb61f4c4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/281ebe94a29b772aa71feeb5ac475d27" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/29e0fc38d3018f76aa40a988b38fd8d6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/2a56bfef6ddb5a6e01c30d2951c3398e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/2ad9be38bf273dbcf39828d36ccb76cd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/2c7d7940cf13836607a7fc5f3f2a7083" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/2f8c808e88290fae5bfe7a3abd0a884d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/35f5c6fa6014253f354d6174c1d3721b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/386f6e3213556bbd2df17d3d93829515" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/3979738bd8d991410d2eb58f20ffbc50" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/39ac9dd67b8d53303cca956040b850cd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/39b1bfa97db060912ee89d588026faa4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/3bb63a2822c98e375c50e0a3c6613bc8" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/3c181cdfa55e274f0f8c613c390e5c7f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/3c591842714c08ad3c653d9ed67a8a80" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/3f08749695e306f1b4906bebeeb5dfdd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/3f1b5208e1f49ce98879b5541b9d5711" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/4001fec16949046ee6875060b4842695" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/4040cb4f0c974fdbef27a60c5d1fbc6e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/423ef80516b202592292376a93bf9eb7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/43a04869fb44a7314cd170bedddac86b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/453fc20e3a4309e4e6684d0f271aafa7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/48046d7a25ee2d62278e9c8876a95bde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/4893a8a4683667cc0be7c53bc8b8d4a5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/49548c0218608e9ce54d69730965377f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/498ccc06524240cba086fb33cf2fa4ed" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/4c157ad9003fd77228814c608c89f4ea" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/4e1a8117e1125b970ae1baee98b07264" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/4e7e05e53ab800f9c1b60ff100d6179b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/4f7b3a38bf05521b38f75e72821f5fc0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/52945781ca4f21da1d576b6c1b5188a4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/558eb8c39f380d45ca0a347665217b52" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/56ca928a47ae7529a411d42589eed7bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/57c486755d0d8093e567c378c5e9496b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/58ef12e90e39944490d25c0e7dfa098d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/5a19080cde4653db18cb4c0e56f5d067" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/5aed51c86a2f73ef8d34d88a19cebfe8" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/5b1dbc68f6ebd1fd444c16281b247d04" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/601504ed86088939b571bc0bc5bd5c51" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/606bc52d40bc868805c13ab7dde5af56" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/616cb55acb3f0b02b35a69a4d69c3904" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/61a4bc824b98af155e7801e418822472" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/61fac36de46b89d8c4f320044aad143a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/6250096c423c74ffe2ecdb4dcfe7aff6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/635ddfd8fb9ec667de35f49645573e5f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/638460d5cdf58468f357f8ae1cfe3bc4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/673659d6cf584ee1a4d04787358a6c22" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/699968b68a4d7e4fc93c2a1ff854cc9c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/6a6e7c2fec10aadfc1fdf93dd55654fb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/6ab3363d8204a2fcfd6b1390969f4cd2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/6c7eff3e64a9d8dcd9e1a559010f176b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/6d14db88f1bc9f75ec8b3ae82e604408" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/6e61b15502fde298164e1084d4bc823c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/6f05de3ca21ffd912f1c51f04fe0c2eb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/720bf1a598a8af8d941225fa48ee571e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7543bfe4f7ff528858ceb691ba05625a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/762b1cc705b733a61c6a92aa1120d461" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/764e2a205d798461607b763f23283812" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/76db57dd13ff8008017635ed3162ccc3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/77909666ad48b5649cd17e34170293f5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/78a0885708b383c4edbea6c255a3f0dc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/790f259854fe948946775632271b81e6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7910868fec5b321fd76dd19a3397b7a6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7ad214f7b374691678946a0f33af0997" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7c7057a2aa293c419c7b09170824db1c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7cb061fec82b1c4f046ea4675af8bc01" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7e6187233a82c6ec1d096f0b478df44d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7e73c0136e2824d43c86ef46ced6a4ec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/7f825cd08d019caee1142d14c01e41ed" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/83e63a5c1f88cdaff25a3a504b11cb46" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/86538cba2444075bb766028c42b0232d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/8916e0dedda5841b755f76958a5b7d72" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/8ced04f58ef5d3cd89d89aa2441a817d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/912defd7fe221b7f69fef0b53ca9aae5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/92ef04201387f847834c8cb1fde8a5e4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/95bb88204b8247ec25079a3c391c21c6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/96c0895eb9b3094dc9522951fe31ce41" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/96d9ab8ef4458366f8e2def792c81286" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/9b9465230a372ebf7730907ff463beb3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/a09f7781473bd8d580f33bbaa29f957b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/a296a519f3641fbfac24d94e31110616" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/a3c1dd2a0ae50df05d8e2b56c3d0c66c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/a5031cf08733d326f659b841e390c920" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ab844cbaea011cb45ab13a802d0117e1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ac443d0ff27eaafb8475192e28a76ffa" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ac972d11340da31b55d0376c3acdf24f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/acd4d6233f5267fc3fa56511332e119d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ad9725c236c8094b24ad508acdab8c8a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/b0d4747b681e25925e2ef8a4b507258a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/b21681f86439fea355d3fe7370a31c21" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/b3ac07ab75236e46b99cedbb3566a1f3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/b4dc0e2ef62d6353c956e9541c90e243" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/b7b3aaadbd742344f570bdefbdcae31e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/b87ef32bd0953afa4e2a44527f06941e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/bbd41b2c2479dcab7086ac4d1852f40e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/bc2b4cf2b3407279c1c7c9267a0d9a64" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/bc918337d1fd4a3a7a9ac6ce155d03e4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/c39d21de921a8d078d046196e65aac3a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/c4da712e4a4b734120be7ac49d05583d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/c8a154f65fbfc63e920cd77c45af2ce8" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ca4ce7c05047c7999b44ac80c07b5838" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/cc7a121525f1fac832634e6f35594e90" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/cd017c3d8b152231219a2af096a97871" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/d022b4c4e831196fd63351cf1ab7945e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/d1585a1d4aeebe42bfb089d1ee1c011c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/d3c9c1e20c62c16e46c605406016f667" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/d8c11064bf31ca7b5906285f044dfe0e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/da5162acdd6106538115205ee4e1a4fc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/db3774edeece23b32a1e2df74acff683" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/e1951cd799045bd672529ad6b1ea01df" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/e2da0b90e268109fd04ca06dca47bd41" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/e43139c7f3290a62e818b4eae028693c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/e607d69f0050d0f24516832c393bdc81" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ea74a0b21b9eaf3206ab458f76f7a794" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/eb45986b9c750fb75c9952a53e6d4364" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ebff4fe2ebbbc3453dac64cd14d77769" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ec28da65d4e183d4e61530864127cc29" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ecd6de62a2580a8686cec3ef3ad02a8b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f10aace19c7fa55946d5c944df4ba010" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f217826c8c45d3c593a3784a54864bf9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f2b4458337c211c6edd027343cf923c3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f528ad458ea8450544c1acda641c59bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f7322fe3c1a6b224dcd1e666775dc5cd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f7ce674ee85b45ad4ae1c3478dc93c1a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f7ece5b94da7018021bfc783f7fd8c17" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/f89be9c171e5bb1cf8c89f16a2de6fea" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/faa6587ff68ade52af92d43fbc7b92fe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../LMS/server/uploads/ff98b47573f35e9ebc75b3b5afac6197" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Mental Health Detection AI/Healthcare AI PPT.pptx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Mental Health Detection AI/Mental Health AI Conference Paper.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Mental Health Detection AI/Mental Health AI Report Documentation.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/config/JwtConstant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/config/JwtProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/config/JwtTokenValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/config/appConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/AddressController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/AdminFoodController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/AdminOrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/AdminRestaurantController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/CartController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/CategoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/EventController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/FoodController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/HomeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/IngredientController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/NotificationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/NotificationCreateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/OrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/RestaurantController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/dto/CategoryDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/dto/FoodDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/dto/RestaurantDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Address.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Cart.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/CartItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/ContactInformation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Event.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Favorite.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Food.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/IngredientCategory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/IngredientsItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Notification.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Order.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/OrderItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/Restaurant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/USER_ROLE.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/AddressRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/CartItemRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/CartRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/CategoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/EventRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/FavoriteRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/FoodRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/IngredientCategoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/IngredientItemRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/NotificationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/OrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/OrderitemRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/RestaurantRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/AddCardItemRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/BulkUpdateFoodCategoryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/CreateFoodRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/CreateRestaurantRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/IngredientCategoryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/IngredientRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/NotificationCreateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/OrderRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/request/UpdateCartItemRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/response/AuthResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/response/MessageResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/response/PaymentResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/CartService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/CartServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/CategoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/CategoryServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/CustomerUserDetailsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/EventService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/EventServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/FoodService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/FoodServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/IngredientServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/IngredientsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/NotificationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/NotificationServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/OrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/OrderServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/PaymentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/PaymentServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/RestaurantService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/RestaurantServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/vighnesh/service/UserServiceImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application-h2.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application-mysql.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/vighnesh/CartItemSerializationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../PROJECTS DETAILS/CLOUD PROJECT.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../PROJECTS DETAILS/git commands.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../PROJECTS DETAILS/react.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ai lec/AI and Industry 4.0 _ Industry 4.0 with Artificial Intelligence _ What is Industry 4.0 _ Edureka.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ai lec/Artificial Intelligence _ What is AI _ Introduction to Artificial Intelligence _ Edureka.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ai lec/Artificial Intelligence in 2 Minutes _ What is Artificial Intelligence_ _ Edureka.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ai lec/Hands-on Rust _ Rust Tutorial _ Rust Programming Language _ Edureka.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ai lec/thumnail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/backend devlop lec/Backend Development explained in 10 minutes _ All you need to know _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/backend devlop lec/GraphQL vs REST_ Whats The Best Kind Of API_ _ REST vs GraphQL _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/backend devlop lec/How To Become A Backend Developer In 2021 _ Backend Developer Roadmap 2021 _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/backend devlop lec/Mean vs Mern_ Which One To Choose_ _ Mean Stack vs Mern Stack _ Full Stack Training _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/backend devlop lec/thumbnail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cloud lec/AWS CloudFormation Tutorial _ AWS Tutorial For Beginners _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cloud lec/AWS Foundation Services_ Networking _ AWS Tutorial _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cloud lec/AWS In 5 Minutes _ What Is AWS_ _ AWS Tutorial For Beginners _ AWS Training _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cloud lec/AWS Redshift Tutorial For Beginners _ Amazon Redshift Tutorial _ AWS Training Video _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cloud lec/Amazon Glacier Tutorial _ AWS Glacier Tutorial _ AWS Tutorial _ AWS Services _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cloud lec/Introduction To AWS SysOps Associate Certification Training _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cloud lec/thumbnail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cyber security lec/Ransomware In Cybersecurity _ What Is Ransomware_ _ Ransomware Attack _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cyber security lec/What Is Cyber Security _ How It Works_ _ Cyber Security In 7 Minutes _ Cyber Security _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cyber security lec/What Is Cybersecurity_ How It Works_ _Cyber Security In 2 Minutes _ Cyber Security _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cyber security lec/What Is VPN &amp; How Does It Work_ _ VPN Explained In 5 Minutes _ Virtual Private Network _ Simplilearn.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cyber security lec/rthumbnail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/cyber security lec/videoplayback.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ml lec/A Quick Guide To Sentiment Analysis _ Sentiment Analysis In Python Using Textblob  _  Edureka.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ml lec/Machine Learning Tutorial Python - 5_ Save Model Using Joblib And Pickle.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ml lec/Machine Learning Tutorial Python - 7_ Training and Testing Data.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ml lec/Machine Learning Tutorial Python -1_ What is Machine Learning_.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/ml lec/thumbnail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/react lec/ReactJS Tutorial - 12 - Destructuring props and state.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/react lec/ReactJS Tutorial - 2 - Hello World.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/react lec/ReactJS Tutorial - 3 - Folder Structure.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/react lec/ReactJS Tutorial - 36 - Render Props (Part 1).mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/react lec/ReactJS Tutorial - 4 - Components.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/react lec/ReactJS Tutorial - 7 - Hooks Update.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../resources/lms/react lec/thumbnail.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Protfolio/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Protfolio/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Protfolio/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Protfolio/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Protfolio/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Protfolio/stylesheet.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Applications/Online Food Ordering" value="3Cyqi1klPsRTg3ewHHZ9odeCwxT" />
+    </persistenceIdMap>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="3Cyqi1klPsRTg3ewHHZ9odeCwxT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1a9602db-8516-4392-bae4-e9a8db3a039f" name="Changes" comment="" />
+      <created>1777368282227</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1777368282227</updated>
+      <workItem from="1777368287330" duration="2981000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
